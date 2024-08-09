@@ -4,14 +4,14 @@
   android:layout_height="match_parent">
 
   <androidx.recyclerview.widget.RecyclerView
-    android:id="@+id/recycler_view_day"
+    android:id="@+id/timeTextView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:scrollbars="vertical" />
 
-  <androidx.recyclerview.widget.RecyclerView
-    android:layout_width="match_parent"
-    android:layout_height="1dp"
-    android:background="@android:color/black" />
+<!--  <androidx.recyclerview.widget.RecyclerView-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="1dp"-->
+<!--    android:background="@android:color/black" />-->
 
 </ScrollView>
