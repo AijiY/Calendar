@@ -1,10 +1,425 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent">
-  <TextView
+  <ScrollView
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:text="Day" />
+    android:isScrollContainer="false">
 
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="vertical">
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+        <TextView
+          android:id="@+id/hourText0"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:layout_gravity="center_vertical"
+          android:gravity="center" />
+        <View
+          android:id="@+id/Line0"
+          android:layout_width="0dp"
+          android:layout_height="0.1dp"
+          android:layout_weight="8"
+          android:layout_marginBottom="40dp"
+          android:background="@color/grey" />
+      </LinearLayout>
+
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+          android:id="@+id/hourText1"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:layout_gravity="center_vertical"
+          android:gravity="center"
+          android:text="@string/hour1" />
+        <View
+          android:id="@+id/Line1"
+          style="@style/LineViewStyle" />
+      </LinearLayout>
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+          android:id="@+id/hourText2"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:layout_gravity="center_vertical"
+          android:gravity="center"
+          tools:text="@string/hour2" />
+        <View
+          android:id="@+id/Line2"
+          style="@style/LineViewStyle" />
+      </LinearLayout>
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+          android:id="@+id/hourText3"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:layout_gravity="center_vertical"
+          android:gravity="center"
+          tools:text="@string/hour3" />
+        <View
+          android:id="@+id/Line3"
+          style="@style/LineViewStyle" />
+      </LinearLayout>
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+          android:id="@+id/hourText4"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:layout_gravity="center_vertical"
+          android:gravity="center"
+          tools:text="@string/hour4" />
+        <View
+          android:id="@+id/Line4"
+          style="@style/LineViewStyle" />
+      </LinearLayout>
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+          android:id="@+id/hourText5"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:layout_gravity="center_vertical"
+          android:gravity="center"
+          tools:text="@string/hour5" />
+        <View
+          android:id="@+id/Line5"
+          style="@style/LineViewStyle" />
+      </LinearLayout>
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+          android:id="@+id/hourText6"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:layout_gravity="center_vertical"
+          android:gravity="center"
+          android:text="@string/hour6" />
+        <View
+          android:id="@+id/Line6"
+          style="@style/LineViewStyle" />
+      </LinearLayout>
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+          android:id="@+id/hourText7"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:layout_gravity="center_vertical"
+          android:gravity="center"
+          android:text="@string/hour7" />
+        <View
+          android:id="@+id/Line7"
+          style="@style/LineViewStyle" />
+      </LinearLayout>
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+          android:id="@+id/hourText8"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:layout_gravity="center_vertical"
+          android:gravity="center"
+          android:text="@string/hour8" />
+        <View
+          android:id="@+id/Line8"
+          style="@style/LineViewStyle" />
+      </LinearLayout>
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+          android:id="@+id/hourText9"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:layout_gravity="center_vertical"
+          android:gravity="center"
+          android:text="@string/hour9" />
+        <View
+          android:id="@+id/Line9"
+          style="@style/LineViewStyle" />
+      </LinearLayout>
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+          android:id="@+id/hourText10"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:layout_gravity="center_vertical"
+          android:gravity="center"
+          tools:text="@string/hour10" />
+        <View
+          android:id="@+id/Line10"
+          style="@style/LineViewStyle" />
+      </LinearLayout>
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+          android:id="@+id/hourText11"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:layout_gravity="center_vertical"
+          android:gravity="center"
+          tools:text="@string/hour11" />
+        <View
+          android:id="@+id/Line11"
+          style="@style/LineViewStyle" />
+      </LinearLayout>
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+          android:id="@+id/hourText12"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:layout_gravity="center_vertical"
+          android:gravity="center"
+          android:text="@string/hour12" />
+        <View
+          android:id="@+id/Line12"
+          style="@style/LineViewStyle" />
+      </LinearLayout>
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+          android:id="@+id/hourText13"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:layout_gravity="center_vertical"
+          android:gravity="center"
+          android:text="@string/hour13" />
+        <View
+          android:id="@+id/Line13"
+          style="@style/LineViewStyle" />
+      </LinearLayout>
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+          android:id="@+id/hourText14"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:layout_gravity="center_vertical"
+          android:gravity="center"
+          android:text="@string/hour14" />
+        <View
+          android:id="@+id/Line14"
+          style="@style/LineViewStyle" />
+      </LinearLayout>
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+          android:id="@+id/hourText15"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:layout_gravity="center_vertical"
+          android:gravity="center"
+          android:text="@string/hour15" />
+        <View
+          android:id="@+id/Line15"
+          style="@style/LineViewStyle" />
+      </LinearLayout>
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+          android:id="@+id/hourText16"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:layout_gravity="center_vertical"
+          android:gravity="center"
+          android:text="@string/hour16" />
+        <View
+          android:id="@+id/Line16"
+          style="@style/LineViewStyle" />
+      </LinearLayout>
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+          android:id="@+id/hourText17"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:layout_gravity="center_vertical"
+          android:gravity="center"
+          android:text="@string/hour17" />
+        <View
+          android:id="@+id/Line17"
+          style="@style/LineViewStyle" />
+      </LinearLayout>
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+          android:id="@+id/hourText18"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:layout_gravity="center_vertical"
+          android:gravity="center"
+          android:text="@string/hour18" />
+        <View
+          android:id="@+id/Line18"
+          style="@style/LineViewStyle" />
+      </LinearLayout>
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+          android:id="@+id/hourText19"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:layout_gravity="center_vertical"
+          android:gravity="center"
+          android:text="@string/hour19" />
+        <View
+          android:id="@+id/Line19"
+          style="@style/LineViewStyle" />
+      </LinearLayout>
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+          android:id="@+id/hourText20"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:layout_gravity="center_vertical"
+          android:gravity="center"
+          android:text="@string/hour20" />
+        <View
+          android:id="@+id/Line20"
+          style="@style/LineViewStyle" />
+      </LinearLayout>
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+          android:id="@+id/hourText21"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:layout_gravity="center_vertical"
+          android:gravity="center"
+          android:text="@string/hour21" />
+        <View
+          android:id="@+id/Line21"
+          style="@style/LineViewStyle" />
+      </LinearLayout>
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+          android:id="@+id/hourText22"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:layout_gravity="center_vertical"
+          android:gravity="center"
+          android:text="@string/hour22" />
+        <View
+          android:id="@+id/Line22"
+          style="@style/LineViewStyle" />
+      </LinearLayout>
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+          android:id="@+id/hourText23"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:layout_gravity="center_vertical"
+          android:gravity="center"
+          android:text="@string/hour23" />
+        <View
+          android:id="@+id/Line23"
+          style="@style/LineViewStyle" />
+      </LinearLayout>
+
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+          android:id="@+id/hourText24"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:layout_gravity="center_vertical"
+          android:gravity="center" />
+        <View
+          android:id="@+id/Line24"
+          android:layout_width="0dp"
+          android:layout_height="0.1dp"
+          android:layout_weight="8"
+          android:layout_marginTop="40dp"
+          android:background="@color/grey" />
+      </LinearLayout>
+    </LinearLayout>
+  </ScrollView>
 </FrameLayout>
