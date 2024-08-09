@@ -17,19 +17,11 @@
       android:orientation="horizontal">
       <TextView
         android:id="@+id/SunTextView"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:background="@color/design_default_color_error"
-        android:gravity="center"
-        android:text="TextView"
+        style="@style/weekdayTextView"
         android:textColor="@color/white"
-        android:textSize="16sp" />
+        android:background="@color/design_default_color_error" />
       <FrameLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="7"
-        android:background="@drawable/left_border" />
+        style="@style/weekdayTaskView" />
     </LinearLayout>
 
     <LinearLayout
@@ -40,17 +32,9 @@
       android:orientation="horizontal">
       <TextView
         android:id="@+id/MonTextView"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="TextView"
-        android:textSize="16sp" />
+        style="@style/weekdayTextView" />
       <FrameLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="7"
-        android:background="@drawable/left_border" />
+        style="@style/weekdayTaskView" />
     </LinearLayout>
 
     <LinearLayout
@@ -61,17 +45,9 @@
       android:orientation="horizontal">
       <TextView
         android:id="@+id/TueTextView"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="TextView"
-        android:textSize="16sp" />
+        style="@style/weekdayTextView" />
       <FrameLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="7"
-        android:background="@drawable/left_border" />
+        style="@style/weekdayTaskView" />
     </LinearLayout>
 
     <LinearLayout
@@ -82,17 +58,9 @@
       android:orientation="horizontal">
       <TextView
         android:id="@+id/WedTextView"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="TextView"
-        android:textSize="16sp" />
+        style="@style/weekdayTextView" />
       <FrameLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="7"
-        android:background="@drawable/left_border" />
+        style="@style/weekdayTaskView" />
     </LinearLayout>
 
     <LinearLayout
@@ -103,17 +71,9 @@
       android:orientation="horizontal">
       <TextView
         android:id="@+id/ThuTextView"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="TextView"
-        android:textSize="16sp" />
+        style="@style/weekdayTextView" />
       <FrameLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="7"
-        android:background="@drawable/left_border" />
+        style="@style/weekdayTaskView" />
     </LinearLayout>
 
     <LinearLayout
@@ -124,17 +84,9 @@
       android:orientation="horizontal">
       <TextView
         android:id="@+id/FriTextView"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:text="TextView"
-        android:textSize="16sp" />
+        style="@style/weekdayTextView" />
       <FrameLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="7"
-        android:background="@drawable/left_border" />
+        style="@style/weekdayTaskView" />
     </LinearLayout>
 
     <LinearLayout
@@ -145,19 +97,11 @@
       android:orientation="horizontal">
       <TextView
         android:id="@+id/SatTextView"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
+        style="@style/weekdayTextView"
         android:background="@color/design_default_color_primary_variant"
-        android:gravity="center"
-        android:text="TextView"
-        android:textColor="@color/white"
-        android:textSize="16sp" />
+        android:textColor="@color/white" />
       <FrameLayout
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="7"
-        android:background="@drawable/left_border" />
+        style="@style/weekdayTaskView" />
     </LinearLayout>
 
   </LinearLayout>
