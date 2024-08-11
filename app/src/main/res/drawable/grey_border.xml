@@ -2,7 +2,7 @@
   <solid android:color="#FFFFFF"/>
   <stroke
     android:width="0.1dp"
-    android:color="#FF808080"/>   <!-- ボーダーの色 -->
+    android:color="@color/grey"/>   <!-- ボーダーの色 -->
   <padding
     android:left="0dp"
     android:top="0dp"

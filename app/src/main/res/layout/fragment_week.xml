@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
   android:layout_width="match_parent"
-  android:layout_height="match_parent"
-  android:background="@drawable/left_border">
+  android:layout_height="match_parent" >
 
   <LinearLayout
     android:layout_width="match_parent"
@@ -10,96 +9,82 @@
     android:orientation="vertical">
 
     <LinearLayout
-      android:layout_width="match_parent"
-      android:layout_height="0dp"
-      android:layout_weight="1"
-      android:background="@drawable/top_border"
-      android:orientation="horizontal">
+      style="@style/dayLayoutInWeek">
       <TextView
         android:id="@+id/SunTextView"
         style="@style/weekdayTextView"
         android:textColor="@color/white"
         android:background="@color/design_default_color_error" />
+      <View
+        style="@style/verticalBorder" />
       <FrameLayout
         style="@style/weekdayTaskView" />
     </LinearLayout>
 
     <LinearLayout
-      android:layout_width="match_parent"
-      android:layout_height="0dp"
-      android:layout_weight="1"
-      android:background="@drawable/top_border"
-      android:orientation="horizontal">
+      style="@style/dayLayoutInWeek">
       <TextView
         android:id="@+id/MonTextView"
         style="@style/weekdayTextView" />
+      <View
+        style="@style/verticalBorder" />
       <FrameLayout
         style="@style/weekdayTaskView" />
     </LinearLayout>
 
     <LinearLayout
-      android:layout_width="match_parent"
-      android:layout_height="0dp"
-      android:layout_weight="1"
-      android:background="@drawable/top_border"
-      android:orientation="horizontal">
+      style="@style/dayLayoutInWeek">
       <TextView
         android:id="@+id/TueTextView"
         style="@style/weekdayTextView" />
+      <View
+        style="@style/verticalBorder" />
       <FrameLayout
         style="@style/weekdayTaskView" />
     </LinearLayout>
 
     <LinearLayout
-      android:layout_width="match_parent"
-      android:layout_height="0dp"
-      android:layout_weight="1"
-      android:background="@drawable/top_border"
-      android:orientation="horizontal">
+      style="@style/dayLayoutInWeek">
       <TextView
         android:id="@+id/WedTextView"
         style="@style/weekdayTextView" />
+      <View
+        style="@style/verticalBorder" />
       <FrameLayout
         style="@style/weekdayTaskView" />
     </LinearLayout>
 
     <LinearLayout
-      android:layout_width="match_parent"
-      android:layout_height="0dp"
-      android:layout_weight="1"
-      android:background="@drawable/top_border"
-      android:orientation="horizontal">
+      style="@style/dayLayoutInWeek">
       <TextView
         android:id="@+id/ThuTextView"
         style="@style/weekdayTextView" />
+      <View
+        style="@style/verticalBorder" />
       <FrameLayout
         style="@style/weekdayTaskView" />
     </LinearLayout>
 
     <LinearLayout
-      android:layout_width="match_parent"
-      android:layout_height="0dp"
-      android:layout_weight="1"
-      android:background="@drawable/top_border"
-      android:orientation="horizontal">
+      style="@style/dayLayoutInWeek">
       <TextView
         android:id="@+id/FriTextView"
         style="@style/weekdayTextView" />
+      <View
+        style="@style/verticalBorder" />
       <FrameLayout
         style="@style/weekdayTaskView" />
     </LinearLayout>
 
     <LinearLayout
-      android:layout_width="match_parent"
-      android:layout_height="0dp"
-      android:layout_weight="1"
-      android:background="@drawable/top_border"
-      android:orientation="horizontal">
+      style="@style/dayLayoutInWeek">
       <TextView
         android:id="@+id/SatTextView"
         style="@style/weekdayTextView"
         android:background="@color/design_default_color_primary_variant"
         android:textColor="@color/white" />
+      <View
+        style="@style/verticalBorder" />
       <FrameLayout
         style="@style/weekdayTaskView" />
     </LinearLayout>
