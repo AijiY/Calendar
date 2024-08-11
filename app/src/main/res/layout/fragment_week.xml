@@ -13,8 +13,8 @@
       <TextView
         android:id="@+id/SunTextView"
         style="@style/weekdayTextView"
-        android:textColor="@color/white"
-        android:background="@color/design_default_color_error" />
+        android:background="@color/red_white"
+        android:textColor="@color/white" />
       <View
         style="@style/verticalBorder" />
       <FrameLayout
@@ -81,7 +81,7 @@
       <TextView
         android:id="@+id/SatTextView"
         style="@style/weekdayTextView"
-        android:background="@color/design_default_color_primary_variant"
+        android:background="@color/blue_white"
         android:textColor="@color/white" />
       <View
         style="@style/verticalBorder" />
