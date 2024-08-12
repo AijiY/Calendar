@@ -15,6 +15,8 @@
         style="@style/dayLayout">
         <TextView
           android:id="@+id/dayText1"
+          android:background="@color/red_white"
+          android:textColor="@color/white"
           style="@style/dayText" />
         <View
           style="@style/horizontalBorder" />
@@ -87,6 +89,8 @@
         style="@style/dayLayout">
         <TextView
           android:id="@+id/dayText7"
+          android:background="@color/blue_white"
+          android:textColor="@color/white"
           style="@style/dayText" />
         <View
           style="@style/horizontalBorder" />
@@ -104,6 +108,8 @@
         style="@style/dayLayout">
         <TextView
           android:id="@+id/dayText8"
+          android:background="@color/red_white"
+          android:textColor="@color/white"
           style="@style/dayText" />
         <View
           style="@style/horizontalBorder" />
@@ -177,6 +183,8 @@
         style="@style/dayLayout">
         <TextView
           android:id="@+id/dayText14"
+          android:background="@color/blue_white"
+          android:textColor="@color/white"
           style="@style/dayText" />
         <View
           style="@style/horizontalBorder" />
@@ -196,6 +204,8 @@
           style="@style/horizontalBorder" />
         <TextView
           android:id="@+id/dayText15"
+          android:background="@color/red_white"
+          android:textColor="@color/white"
           style="@style/dayText" />
         <FrameLayout
           android:id="@+id/dayTaskView15"
@@ -266,6 +276,9 @@
         style="@style/dayLayout">
         <TextView
           android:id="@+id/dayText21"
+          android:background="@color/blue_white"
+          android:textColor="@color/white"
+
           style="@style/dayText" />
         <View
           style="@style/horizontalBorder" />
@@ -283,6 +296,8 @@
         style="@style/dayLayout">
         <TextView
           android:id="@+id/dayText22"
+          android:background="@color/red_white"
+          android:textColor="@color/white"
           style="@style/dayText" />
         <View
           style="@style/horizontalBorder" />
@@ -355,6 +370,8 @@
         style="@style/dayLayout">
         <TextView
           android:id="@+id/dayText28"
+          android:background="@color/blue_white"
+          android:textColor="@color/white"
           style="@style/dayText" />
         <View
           style="@style/horizontalBorder" />
@@ -372,6 +389,8 @@
         style="@style/dayLayout">
         <TextView
           android:id="@+id/dayText29"
+          android:background="@color/red_white"
+          android:textColor="@color/white"
           style="@style/dayText" />
         <View
           style="@style/horizontalBorder" />
@@ -444,6 +463,8 @@
         style="@style/dayLayout">
         <TextView
           android:id="@+id/dayText35"
+          android:background="@color/blue_white"
+          android:textColor="@color/white"
           style="@style/dayText" />
         <View
           style="@style/horizontalBorder" />

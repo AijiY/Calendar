@@ -62,38 +62,53 @@ public class MonthFragment extends Fragment {
       TextView dayText = dayTexts[i];
       if (dayText != null) {
         int day = i - (startDayOfWeek - 1) + 1;
+        int dayOfWeek = (i % 7) + 1; // 日曜日が1、土曜日が7
+
         if (i < startDayOfWeek - 1) {
           // 前月の日付
           dayText.setText(String.valueOf(day + getDaysInPreviousMonth(calendar, startDayOfWeek - 1)));
           dayText.setTextColor(Color.LTGRAY); // 文字色を薄くする
-          dayText.setBackgroundColor(Color.TRANSPARENT); // 背景色を透明にする
+          if (dayOfWeek == Calendar.SUNDAY) {
+            dayText.setBackgroundColor(Color.parseColor("#FF9F9F")); // 薄い赤（red_white）
+          } else if (dayOfWeek == Calendar.SATURDAY) {
+            dayText.setBackgroundColor(Color.parseColor("#9F9FFF")); // 薄い青（blue_white）
+          } else {
+            dayText.setBackgroundColor(Color.TRANSPARENT); // 背景色を透明にする
+          }
         } else if (day <= daysInMonth) {
           // 今月の日付
           dayText.setText(String.valueOf(day));
           dayText.setTextColor(Color.BLACK); // 文字色を黒にする
           dayText.setBackgroundColor(Color.TRANSPARENT); // 背景色を透明にする
+          // 色分け処理
+          if ((i + 1) % 7 == 1) {
+            // 1, 8, 15, ... を赤と白の中間色で塗りつぶす
+            dayText.setBackgroundColor(Color.parseColor("#FF6F6F")); // 赤と白の中間色
+            dayText.setTextColor(Color.WHITE);
+          } else if ((i + 1) % 7 == 0) {
+            // 7, 14, 21, ... を青と白の中間色で塗りつぶす
+            dayText.setBackgroundColor(Color.parseColor("#6F6FFF")); // 青と白の中間色
+            dayText.setTextColor(Color.WHITE);
+          }
         } else {
           // 翌月の日付
           dayText.setText(String.valueOf(day - daysInMonth));
           dayText.setTextColor(Color.LTGRAY); // 文字色を薄くする
-          dayText.setBackgroundColor(Color.TRANSPARENT); // 背景色を透明にする
-        }
-
-        // 色分け処理
-        if ((i + 1) % 7 == 1) {
-          // 1, 8, 15, ... を赤と白の中間色で塗りつぶす
-          dayText.setBackgroundColor(Color.parseColor("#FF6F6F")); // 赤と白の中間色
-          dayText.setTextColor(Color.WHITE);
-        } else if ((i + 1) % 7 == 0) {
-          // 7, 14, 21, ... を青と白の中間色で塗りつぶす
-          dayText.setBackgroundColor(Color.parseColor("#6F6FFF")); // 青と白の中間色
-          dayText.setTextColor(Color.WHITE);
+          if (dayOfWeek == Calendar.SUNDAY) {
+            dayText.setBackgroundColor(Color.parseColor("#FF9F9F")); // 薄い赤（red_white）
+          } else if (dayOfWeek == Calendar.SATURDAY) {
+            dayText.setBackgroundColor(Color.parseColor("#9F9FFF")); // 薄い青（blue_white）
+          } else {
+            dayText.setBackgroundColor(Color.TRANSPARENT); // 背景色を透明にする
+          }
         }
       }
     }
 
     return view;
   }
+
+
 
   // 前月の日数を計算するメソッド
   private int getDaysInPreviousMonth(Calendar calendar, int startDayOfWeek) {
