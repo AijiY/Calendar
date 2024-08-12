@@ -1,0 +1,6 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+<!--  <solid android:color="#90EE90"/>  &lt;!&ndash; 背景色をライトグリーンに設定 &ndash;&gt;-->
+  <corners android:radius="8dp"/>  <!-- 角の半径を設定 -->
+  <solid android:color="@color/green"/>  <!-- 背景色を設定 -->
+  <padding android:left="0dp" android:top="0dp" android:right="0dp" android:bottom="0dp"/>  <!-- ボーダーなし -->
+</shape>

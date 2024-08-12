@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent">
+
+  <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginTop="16dp"
+    android:layout_marginBottom="16dp"
+    android:orientation="vertical">
+    <LinearLayout
+      android:id="@+id/operationButtonContainer"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal">
+      <Button
+        android:id="@+id/exitButton"
+        style="@style/exitButtonStyle"
+        android:layout_marginStart="8dp"
+        android:layout_gravity="start"
+        android:text="@string/exitButton"
+        android:textColor="@color/black"
+        android:textSize="20sp"
+        app:backgroundTint="@null" />
+      <Space
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+      <Button
+        android:id="@+id/storeButton"
+        style="@style/storeButtonStyle"
+        android:layout_marginEnd="8dp"
+        android:layout_gravity="end"
+        android:text="@string/storeButton"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        app:backgroundTint="@null" />
+    </LinearLayout>
+    <com.google.android.material.textfield.TextInputLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="48dp"
+      android:layout_marginEnd="16dp"
+      android:hint="@string/inputHint"
+      app:hintEnabled="true">
+
+      <com.google.android.material.textfield.TextInputEditText
+        android:id="@+id/titleInput"
+        style="@style/CustomInputTextLayoutStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="text"
+        android:textSize="24sp" />
+    </com.google.android.material.textfield.TextInputLayout>
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:orientation="horizontal">
+      <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <RadioButton
+          android:id="@+id/radioButton"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:layout_marginStart="64dp"
+          android:checked="true"
+          android:text="@string/planRadioButton" />
+        <RadioButton
+          android:id="@+id/radioButton3"
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1"
+          android:layout_marginEnd="64dp"
+          android:checked="false"
+          android:text="@string/taskRadioButton" />
+      </RadioGroup>
+    </LinearLayout>
+    <View style="@style/horizontalBorder" />
+    <Switch
+      android:id="@+id/allDaySwitch"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="48dp"
+      android:padding="16dp"
+      android:text="@string/allDay" />
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="48dp"
+      android:layout_marginEnd="16dp"
+      android:orientation="horizontal">
+      <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start">
+
+        <com.google.android.material.textfield.TextInputEditText
+          android:id="@+id/editStartDate"
+          style="@style/CustomInputTextLayoutStyle"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:clickable="true"
+          android:focusable="false"
+          android:focusableInTouchMode="false"
+          android:enabled="true"
+          android:inputType="none"
+          android:text="@string/daySample" />
+      </com.google.android.material.textfield.TextInputLayout>
+      <Space
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+      <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end">
+
+        <com.google.android.material.textfield.TextInputEditText
+          android:id="@+id/editStartTime"
+          style="@style/CustomInputTextLayoutStyle"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:clickable="true"
+          android:focusable="false"
+          android:focusableInTouchMode="false"
+          android:enabled="true"
+          android:inputType="none"
+          android:text="@string/daySample" />
+      </com.google.android.material.textfield.TextInputLayout>
+    </LinearLayout>
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginStart="48dp"
+      android:layout_marginEnd="16dp"
+      android:orientation="horizontal">
+      <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start">
+
+        <com.google.android.material.textfield.TextInputEditText
+          android:id="@+id/editEndDate"
+          style="@style/CustomInputTextLayoutStyle"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:clickable="true"
+          android:focusable="false"
+          android:focusableInTouchMode="false"
+          android:enabled="true"
+          android:inputType="none"
+          android:text="@string/daySample" />
+      </com.google.android.material.textfield.TextInputLayout>
+      <Space
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="1" />
+      <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end">
+
+        <com.google.android.material.textfield.TextInputEditText
+          android:id="@+id/editEndTime"
+          style="@style/CustomInputTextLayoutStyle"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:clickable="true"
+          android:focusable="false"
+          android:focusableInTouchMode="false"
+          android:enabled="true"
+          android:inputType="none"
+          android:text="@string/daySample" />
+      </com.google.android.material.textfield.TextInputLayout>
+    </LinearLayout>
+  </LinearLayout>
+</FrameLayout>

@@ -20,6 +20,35 @@
     <item name="android:background">@color/lightGrey</item>
   </style>
 
+  <style name="addButtonStyle">
+    <item name="android:background">@drawable/add_button</item> <!-- カスタム背景を指定 -->
+    <item name="android:layout_width">wrap_content</item> <!-- 横幅を自動調整 -->
+    <item name="android:layout_height">wrap_content</item> <!-- 高さを自動調整 -->
+    <item name="android:minWidth">50dp</item> <!-- 最小幅を指定して正方形に近づける -->
+    <item name="android:minHeight">50dp</item> <!-- 最小高さを指定して正方形に近づける -->
+  </style>
+
+  <style name="exitButtonStyle">
+    <item name="android:background">@drawable/exit_button</item> <!-- カスタム背景を指定 -->
+    <item name="android:layout_width">wrap_content</item> <!-- 横幅を自動調整 -->
+    <item name="android:layout_height">match_parent</item> <!-- 高さを自動調整 -->
+    <item name="android:minWidth">50dp</item> <!-- 最小幅を指定して正方形に近づける -->
+    <item name="android:minHeight">50dp</item> <!-- 最小高さを指定して正方形に近づける -->
+  </style>
+
+  <style name="storeButtonStyle">
+    <item name="android:background">@drawable/store_button</item> <!-- カスタム背景を指定 -->
+    <item name="android:layout_width">wrap_content</item> <!-- 横幅を自動調整 -->
+    <item name="android:layout_height">wrap_content</item> <!-- 高さを自動調整 -->
+    <item name="android:minWidth">50dp</item> <!-- 最小幅を指定して正方形に近づける -->
+    <item name="android:minHeight">50dp</item> <!-- 最小高さを指定して正方形に近づける -->
+  </style>
+
+  <style name="CustomInputTextLayoutStyle" parent="Widget.MaterialComponents.TextInputEditText.OutlinedBox">
+    <item name="android:background">@android:color/transparent</item> <!-- 背景を透明に設定 -->
+    <item name="android:textColor">@android:color/black</item> <!-- テキストカラーを設定 -->
+  </style>
+
 <!--fragment_day-->
   <style name="LineViewStyle">
     <item name="android:layout_marginTop">40dp</item>
