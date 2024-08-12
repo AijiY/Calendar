@@ -1,0 +1,7 @@
+<shape xmlns:android="http://schemas.android.com/apk/res/android">
+  <solid android:color="@android:color/transparent" /> <!-- 背景は透明 -->
+  <stroke
+    android:width="2dp"
+    android:color="#FFD700" /> <!-- 黄色い枠線 -->
+  <corners android:radius="50dp" /> <!-- 円形にする -->
+</shape>

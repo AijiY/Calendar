@@ -10,11 +10,23 @@
 
     <LinearLayout
       style="@style/dayLayoutInWeek">
-      <TextView
-        android:id="@+id/SunTextView"
-        style="@style/weekdayTextView"
-        android:background="@color/red_white"
-        android:textColor="@color/white" />
+      <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+        <TextView
+          android:id="@+id/SunTextView"
+          style="@style/weekdayTextView"
+          android:background="@color/red_white"
+          android:textColor="@color/white" />
+        <View
+          android:id="@+id/sunCircleView"
+          android:layout_width="48dp"
+          android:layout_height="48dp"
+          android:layout_gravity="center"
+          android:background="@drawable/circle_outline"
+          android:visibility="gone" />
+      </FrameLayout>
       <View
         style="@style/verticalBorder" />
       <FrameLayout
@@ -23,9 +35,21 @@
 
     <LinearLayout
       style="@style/dayLayoutInWeek">
-      <TextView
-        android:id="@+id/MonTextView"
-        style="@style/weekdayTextView" />
+      <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+        <TextView
+          android:id="@+id/MonTextView"
+          style="@style/weekdayTextView" />
+        <View
+          android:id="@+id/monCircleView"
+          android:layout_width="48dp"
+          android:layout_height="48dp"
+          android:layout_gravity="center"
+          android:background="@drawable/circle_outline"
+          android:visibility="gone" />
+      </FrameLayout>
       <View
         style="@style/verticalBorder" />
       <FrameLayout
@@ -34,9 +58,21 @@
 
     <LinearLayout
       style="@style/dayLayoutInWeek">
-      <TextView
-        android:id="@+id/TueTextView"
-        style="@style/weekdayTextView" />
+      <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+        <TextView
+          android:id="@+id/TueTextView"
+          style="@style/weekdayTextView" />
+        <View
+          android:id="@+id/tueCircleView"
+          android:layout_width="48dp"
+          android:layout_height="48dp"
+          android:layout_gravity="center"
+          android:background="@drawable/circle_outline"
+          android:visibility="gone" />
+      </FrameLayout>
       <View
         style="@style/verticalBorder" />
       <FrameLayout
@@ -45,9 +81,21 @@
 
     <LinearLayout
       style="@style/dayLayoutInWeek">
-      <TextView
-        android:id="@+id/WedTextView"
-        style="@style/weekdayTextView" />
+      <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+        <TextView
+          android:id="@+id/WedTextView"
+          style="@style/weekdayTextView" />
+        <View
+          android:id="@+id/wedCircleView"
+          android:layout_width="48dp"
+          android:layout_height="48dp"
+          android:layout_gravity="center"
+          android:background="@drawable/circle_outline"
+          android:visibility="gone" />
+      </FrameLayout>
       <View
         style="@style/verticalBorder" />
       <FrameLayout
@@ -56,9 +104,21 @@
 
     <LinearLayout
       style="@style/dayLayoutInWeek">
-      <TextView
-        android:id="@+id/ThuTextView"
-        style="@style/weekdayTextView" />
+      <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+        <TextView
+          android:id="@+id/ThuTextView"
+          style="@style/weekdayTextView" />
+        <View
+          android:id="@+id/thuCircleView"
+          android:layout_width="48dp"
+          android:layout_height="48dp"
+          android:layout_gravity="center"
+          android:background="@drawable/circle_outline"
+          android:visibility="gone" />
+      </FrameLayout>
       <View
         style="@style/verticalBorder" />
       <FrameLayout
@@ -67,9 +127,21 @@
 
     <LinearLayout
       style="@style/dayLayoutInWeek">
-      <TextView
-        android:id="@+id/FriTextView"
-        style="@style/weekdayTextView" />
+      <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+        <TextView
+          android:id="@+id/FriTextView"
+          style="@style/weekdayTextView" />
+        <View
+          android:id="@+id/friCircleView"
+          android:layout_width="48dp"
+          android:layout_height="48dp"
+          android:layout_gravity="center"
+          android:background="@drawable/circle_outline"
+          android:visibility="gone" />
+      </FrameLayout>
       <View
         style="@style/verticalBorder" />
       <FrameLayout
@@ -78,11 +150,23 @@
 
     <LinearLayout
       style="@style/dayLayoutInWeek">
-      <TextView
-        android:id="@+id/SatTextView"
-        style="@style/weekdayTextView"
-        android:background="@color/blue_white"
-        android:textColor="@color/white" />
+      <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+        <TextView
+          android:id="@+id/SatTextView"
+          style="@style/weekdayTextView"
+          android:background="@color/blue_white"
+          android:textColor="@color/white" />
+        <View
+          android:id="@+id/satCircleView"
+          android:layout_width="48dp"
+          android:layout_height="48dp"
+          android:layout_gravity="center"
+          android:background="@drawable/circle_outline"
+          android:visibility="gone" />
+      </FrameLayout>
       <View
         style="@style/verticalBorder" />
       <FrameLayout
