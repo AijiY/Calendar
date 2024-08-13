@@ -14,6 +14,7 @@ import java.util.Date;
 public class MonthFragment extends Fragment {
   private static final String ARG_DATE = "showingDate";
   private Date showingDate;
+  private Date presentDate = MainActivity.presentDate;
 
   public MonthFragment() {
   }
@@ -57,9 +58,24 @@ public class MonthFragment extends Fragment {
       }
     }
 
+    // 各 CircleView を取得
+    View[] circles = new View[35];
+    for (int i = 0; i < 35; i++) {
+      String idName = "circleView" + (i + 1);
+      int resId = getResources().getIdentifier(idName, "id", getActivity().getPackageName());
+      if (resId != 0) {
+        circles[i] = view.findViewById(resId);
+      }
+    }
+
+    // 現在の日付を取得
+    Calendar today = Calendar.getInstance();
+    today.setTime(presentDate);
+
     // 日付の設定
     for (int i = 0; i < 35; i++) {
       TextView dayText = dayTexts[i];
+      View circle = circles[i]; // CircleView を取得
       if (dayText != null) {
         int day = i - (startDayOfWeek - 1) + 1;
         int dayOfWeek = (i % 7) + 1; // 日曜日が1、土曜日が7
@@ -75,6 +91,7 @@ public class MonthFragment extends Fragment {
           } else {
             dayText.setBackgroundColor(Color.TRANSPARENT); // 背景色を透明にする
           }
+          circle.setVisibility(View.GONE); // 前月の日付には CircleView を非表示
         } else if (day <= daysInMonth) {
           // 今月の日付
           dayText.setText(String.valueOf(day));
@@ -90,6 +107,15 @@ public class MonthFragment extends Fragment {
             dayText.setBackgroundColor(Color.parseColor("#6F6FFF")); // 青と白の中間色
             dayText.setTextColor(Color.WHITE);
           }
+          // 現在の日付に対応する CircleView を表示
+          calendar.set(Calendar.DAY_OF_MONTH, day);
+          if (calendar.get(Calendar.YEAR) == today.get(Calendar.YEAR) &&
+              calendar.get(Calendar.MONTH) == today.get(Calendar.MONTH) &&
+              calendar.get(Calendar.DAY_OF_MONTH) == today.get(Calendar.DAY_OF_MONTH)) {
+            circle.setVisibility(View.VISIBLE);  // 現在の日付に対応する CircleView を表示
+          } else {
+            circle.setVisibility(View.GONE);     // その他の日付に対応する CircleView を非表示
+          }
         } else {
           // 翌月の日付
           dayText.setText(String.valueOf(day - daysInMonth));
@@ -101,6 +127,7 @@ public class MonthFragment extends Fragment {
           } else {
             dayText.setBackgroundColor(Color.TRANSPARENT); // 背景色を透明にする
           }
+          circle.setVisibility(View.GONE); // 翌月の日付には CircleView を非表示
         }
       }
     }

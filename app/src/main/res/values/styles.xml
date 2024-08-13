@@ -100,8 +100,7 @@
 
   <style name="dayText">
     <item name="android:layout_width">match_parent</item>
-    <item name="android:layout_height">0dp</item>
-    <item name="android:layout_weight">1</item>
+    <item name="android:layout_height">match_parent</item>
     <item name="android:gravity">center</item>
     <item name="android:text">@string/daySample</item> <!-- デフォルトのテキスト -->
   </style>
@@ -110,6 +109,20 @@
     <item name="android:layout_width">match_parent</item>
     <item name="android:layout_height">0dp</item>
     <item name="android:layout_weight">5</item>
+  </style>
+
+  <style name="month_circle">
+    <item name="android:layout_width">24dp</item>
+    <item name="android:layout_height">24dp</item>
+    <item name="android:layout_gravity">center</item>
+    <item name="android:background">@drawable/circle_outline</item>
+    <item name="android:visibility">gone</item>
+  </style>
+
+  <style name="dayTextContainer">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">0dp</item>
+    <item name="android:layout_weight">1</item>
   </style>
 
 </resources>
