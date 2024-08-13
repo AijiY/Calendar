@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent">
   <LinearLayout
@@ -13,11 +14,18 @@
       <LinearLayout
         android:id="@+id/day1"
         style="@style/dayLayout">
-        <TextView
-          android:id="@+id/dayText1"
-          android:background="@color/red_white"
-          android:textColor="@color/white"
-          style="@style/dayText" />
+        <FrameLayout
+          style="@style/dayTextContainer"
+          tools:ignore="Suspicious0dp">
+          <TextView
+            android:id="@+id/dayText1"
+            android:textColor="@color/white"
+            style="@style/dayText" />
+          <View
+            android:id="@+id/circleView1"
+            style="@style/month_circle"
+            android:visibility="gone" />
+        </FrameLayout>
         <View
           style="@style/horizontalBorder" />
         <FrameLayout
@@ -27,9 +35,17 @@
       <LinearLayout
         android:id="@+id/day2"
         style="@style/dayLayout">
-        <TextView
-          android:id="@+id/dayText2"
-          style="@style/dayText" />
+        <FrameLayout
+          style="@style/dayTextContainer"
+          tools:ignore="Suspicious0dp">
+          <TextView
+            android:id="@+id/dayText2"
+            style="@style/dayText" />
+          <View
+            android:id="@+id/circleView2"
+            style="@style/month_circle"
+            android:visibility="gone" />
+        </FrameLayout>
         <View
           style="@style/horizontalBorder" />
         <FrameLayout
@@ -39,9 +55,17 @@
       <LinearLayout
         android:id="@+id/day3"
         style="@style/dayLayout">
-        <TextView
-          android:id="@+id/dayText3"
-          style="@style/dayText" />
+        <FrameLayout
+          style="@style/dayTextContainer"
+          tools:ignore="Suspicious0dp">
+          <TextView
+            android:id="@+id/dayText3"
+            style="@style/dayText" />
+          <View
+            android:id="@+id/circleView3"
+            style="@style/month_circle"
+            android:visibility="gone" />
+        </FrameLayout>
         <View
           style="@style/horizontalBorder" />
         <FrameLayout
@@ -51,9 +75,17 @@
       <LinearLayout
         android:id="@+id/day4"
         style="@style/dayLayout">
-        <TextView
-          android:id="@+id/dayText4"
-          style="@style/dayText" />
+        <FrameLayout
+          style="@style/dayTextContainer"
+          tools:ignore="Suspicious0dp">
+          <TextView
+            android:id="@+id/dayText4"
+            style="@style/dayText" />
+          <View
+            android:id="@+id/circleView4"
+            style="@style/month_circle"
+            android:visibility="gone" />
+        </FrameLayout>
         <View
           style="@style/horizontalBorder" />
         <FrameLayout
@@ -63,9 +95,17 @@
       <LinearLayout
         android:id="@+id/day5"
         style="@style/dayLayout">
-        <TextView
-          android:id="@+id/dayText5"
-          style="@style/dayText" />
+        <FrameLayout
+          style="@style/dayTextContainer"
+          tools:ignore="Suspicious0dp">
+          <TextView
+            android:id="@+id/dayText5"
+            style="@style/dayText" />
+          <View
+            android:id="@+id/circleView5"
+            style="@style/month_circle"
+            android:visibility="gone" />
+        </FrameLayout>
         <View
           style="@style/horizontalBorder" />
         <FrameLayout
@@ -75,9 +115,17 @@
       <LinearLayout
         android:id="@+id/day6"
         style="@style/dayLayout">
-        <TextView
-          android:id="@+id/dayText6"
-          style="@style/dayText" />
+        <FrameLayout
+          style="@style/dayTextContainer"
+          tools:ignore="Suspicious0dp">
+          <TextView
+            android:id="@+id/dayText6"
+            style="@style/dayText" />
+          <View
+            android:id="@+id/circleView6"
+            style="@style/month_circle"
+            android:visibility="gone" />
+        </FrameLayout>
         <View
           style="@style/horizontalBorder" />
         <FrameLayout
@@ -87,11 +135,18 @@
       <LinearLayout
         android:id="@+id/day7"
         style="@style/dayLayout">
-        <TextView
-          android:id="@+id/dayText7"
-          android:background="@color/blue_white"
-          android:textColor="@color/white"
-          style="@style/dayText" />
+        <FrameLayout
+          style="@style/dayTextContainer"
+          tools:ignore="Suspicious0dp">
+          <TextView
+            android:id="@+id/dayText7"
+            android:textColor="@color/white"
+            style="@style/dayText" />
+          <View
+            android:id="@+id/circleView7"
+            style="@style/month_circle"
+            android:visibility="gone" />
+        </FrameLayout>
         <View
           style="@style/horizontalBorder" />
         <FrameLayout
@@ -106,11 +161,18 @@
       <LinearLayout
         android:id="@+id/day8"
         style="@style/dayLayout">
-        <TextView
-          android:id="@+id/dayText8"
-          android:background="@color/red_white"
-          android:textColor="@color/white"
-          style="@style/dayText" />
+        <FrameLayout
+          style="@style/dayTextContainer"
+          tools:ignore="Suspicious0dp">
+          <TextView
+            android:id="@+id/dayText8"
+            android:textColor="@color/white"
+            style="@style/dayText" />
+          <View
+            android:id="@+id/circleView8"
+            style="@style/month_circle"
+            android:visibility="gone" />
+        </FrameLayout>
         <View
           style="@style/horizontalBorder" />
         <FrameLayout
@@ -120,9 +182,17 @@
       <LinearLayout
         android:id="@+id/day9"
         style="@style/dayLayout">
-        <TextView
-          android:id="@+id/dayText9"
-          style="@style/dayText" />
+        <FrameLayout
+          style="@style/dayTextContainer"
+          tools:ignore="Suspicious0dp">
+          <TextView
+            android:id="@+id/dayText9"
+            style="@style/dayText" />
+          <View
+            android:id="@+id/circleView9"
+            style="@style/month_circle"
+            android:visibility="gone" />
+        </FrameLayout>
         <View
           style="@style/horizontalBorder" />
         <FrameLayout
@@ -132,9 +202,17 @@
       <LinearLayout
         android:id="@+id/day10"
         style="@style/dayLayout">
-        <TextView
-          android:id="@+id/dayText10"
-          style="@style/dayText" />
+        <FrameLayout
+          style="@style/dayTextContainer"
+          tools:ignore="Suspicious0dp">
+          <TextView
+            android:id="@+id/dayText10"
+            style="@style/dayText" />
+          <View
+            android:id="@+id/circleView10"
+            style="@style/month_circle"
+            android:visibility="gone" />
+        </FrameLayout>
         <View
           style="@style/horizontalBorder" />
         <FrameLayout
@@ -144,10 +222,17 @@
       <LinearLayout
         android:id="@+id/day11"
         style="@style/dayLayout">
-
-        <TextView
-          android:id="@+id/dayText11"
-          style="@style/dayText" />
+        <FrameLayout
+          style="@style/dayTextContainer"
+          tools:ignore="Suspicious0dp">
+          <TextView
+            android:id="@+id/dayText11"
+            style="@style/dayText" />
+          <View
+            android:id="@+id/circleView11"
+            style="@style/month_circle"
+            android:visibility="gone" />
+        </FrameLayout>
         <View
           style="@style/horizontalBorder" />
         <FrameLayout
@@ -157,9 +242,17 @@
       <LinearLayout
         android:id="@+id/day12"
         style="@style/dayLayout">
-        <TextView
-          android:id="@+id/dayText12"
-          style="@style/dayText" />
+        <FrameLayout
+          style="@style/dayTextContainer"
+          tools:ignore="Suspicious0dp">
+          <TextView
+            android:id="@+id/dayText12"
+            style="@style/dayText" />
+          <View
+            android:id="@+id/circleView12"
+            style="@style/month_circle"
+            android:visibility="gone" />
+        </FrameLayout>
         <View
           style="@style/horizontalBorder" />
         <FrameLayout
@@ -169,9 +262,17 @@
       <LinearLayout
         android:id="@+id/day13"
         style="@style/dayLayout">
-        <TextView
-          android:id="@+id/dayText13"
-          style="@style/dayText" />
+        <FrameLayout
+          style="@style/dayTextContainer"
+          tools:ignore="Suspicious0dp">
+          <TextView
+            android:id="@+id/dayText13"
+            style="@style/dayText" />
+          <View
+            android:id="@+id/circleView13"
+            style="@style/month_circle"
+            android:visibility="gone" />
+        </FrameLayout>
         <View
           style="@style/horizontalBorder" />
         <FrameLayout
@@ -181,11 +282,18 @@
       <LinearLayout
         android:id="@+id/day14"
         style="@style/dayLayout">
-        <TextView
-          android:id="@+id/dayText14"
-          android:background="@color/blue_white"
-          android:textColor="@color/white"
-          style="@style/dayText" />
+        <FrameLayout
+          style="@style/dayTextContainer"
+          tools:ignore="Suspicious0dp">
+          <TextView
+            android:id="@+id/dayText14"
+            android:textColor="@color/white"
+            style="@style/dayText" />
+          <View
+            android:id="@+id/circleView14"
+            style="@style/month_circle"
+            android:visibility="gone" />
+        </FrameLayout>
         <View
           style="@style/horizontalBorder" />
         <FrameLayout
@@ -200,13 +308,20 @@
       <LinearLayout
         android:id="@+id/day15"
         style="@style/dayLayout">
+        <FrameLayout
+          style="@style/dayTextContainer"
+          tools:ignore="Suspicious0dp">
+          <TextView
+            android:id="@+id/dayText15"
+            android:textColor="@color/white"
+            style="@style/dayText" />
+          <View
+            android:id="@+id/circleView15"
+            style="@style/month_circle"
+            android:visibility="gone" />
+        </FrameLayout>
         <View
           style="@style/horizontalBorder" />
-        <TextView
-          android:id="@+id/dayText15"
-          android:background="@color/red_white"
-          android:textColor="@color/white"
-          style="@style/dayText" />
         <FrameLayout
           android:id="@+id/dayTaskView15"
           style="@style/dayTaskView" />
@@ -214,9 +329,17 @@
       <LinearLayout
         android:id="@+id/day16"
         style="@style/dayLayout">
-        <TextView
-          android:id="@+id/dayText16"
-          style="@style/dayText" />
+        <FrameLayout
+          style="@style/dayTextContainer"
+          tools:ignore="Suspicious0dp">
+          <TextView
+            android:id="@+id/dayText16"
+            style="@style/dayText" />
+          <View
+            android:id="@+id/circleView16"
+            style="@style/month_circle"
+            android:visibility="gone" />
+        </FrameLayout>
         <View
           style="@style/horizontalBorder" />
         <FrameLayout
@@ -226,9 +349,17 @@
       <LinearLayout
         android:id="@+id/day17"
         style="@style/dayLayout">
-        <TextView
-          android:id="@+id/dayText17"
-          style="@style/dayText" />
+        <FrameLayout
+          style="@style/dayTextContainer"
+          tools:ignore="Suspicious0dp">
+          <TextView
+            android:id="@+id/dayText17"
+            style="@style/dayText" />
+          <View
+            android:id="@+id/circleView17"
+            style="@style/month_circle"
+            android:visibility="gone" />
+        </FrameLayout>
         <View
           style="@style/horizontalBorder" />
         <FrameLayout
@@ -238,9 +369,17 @@
       <LinearLayout
         android:id="@+id/day18"
         style="@style/dayLayout">
-        <TextView
-          android:id="@+id/dayText18"
-          style="@style/dayText" />
+        <FrameLayout
+          style="@style/dayTextContainer"
+          tools:ignore="Suspicious0dp">
+          <TextView
+            android:id="@+id/dayText18"
+            style="@style/dayText" />
+          <View
+            android:id="@+id/circleView18"
+            style="@style/month_circle"
+            android:visibility="gone" />
+        </FrameLayout>
         <View
           style="@style/horizontalBorder" />
         <FrameLayout
@@ -250,9 +389,17 @@
       <LinearLayout
         android:id="@+id/day19"
         style="@style/dayLayout">
-        <TextView
-          android:id="@+id/dayText19"
-          style="@style/dayText" />
+        <FrameLayout
+          style="@style/dayTextContainer"
+          tools:ignore="Suspicious0dp">
+          <TextView
+            android:id="@+id/dayText19"
+            style="@style/dayText" />
+          <View
+            android:id="@+id/circleView19"
+            style="@style/month_circle"
+            android:visibility="gone" />
+        </FrameLayout>
         <View
           style="@style/horizontalBorder" />
         <FrameLayout
@@ -262,9 +409,17 @@
       <LinearLayout
         android:id="@+id/day20"
         style="@style/dayLayout">
-        <TextView
-          android:id="@+id/dayText20"
-          style="@style/dayText" />
+        <FrameLayout
+          style="@style/dayTextContainer"
+          tools:ignore="Suspicious0dp">
+          <TextView
+            android:id="@+id/dayText20"
+            style="@style/dayText" />
+          <View
+            android:id="@+id/circleView20"
+            style="@style/month_circle"
+            android:visibility="gone" />
+        </FrameLayout>
         <View
           style="@style/horizontalBorder" />
         <FrameLayout
@@ -274,12 +429,19 @@
       <LinearLayout
         android:id="@+id/day21"
         style="@style/dayLayout">
-        <TextView
-          android:id="@+id/dayText21"
-          android:background="@color/blue_white"
-          android:textColor="@color/white"
+        <FrameLayout
+          style="@style/dayTextContainer"
+          tools:ignore="Suspicious0dp">
+          <TextView
+            android:id="@+id/dayText21"
+            android:textColor="@color/white"
 
-          style="@style/dayText" />
+            style="@style/dayText" />
+          <View
+            android:id="@+id/circleView21"
+            style="@style/month_circle"
+            android:visibility="gone" />
+        </FrameLayout>
         <View
           style="@style/horizontalBorder" />
         <FrameLayout
@@ -294,11 +456,18 @@
       <LinearLayout
         android:id="@+id/day22"
         style="@style/dayLayout">
-        <TextView
-          android:id="@+id/dayText22"
-          android:background="@color/red_white"
-          android:textColor="@color/white"
-          style="@style/dayText" />
+        <FrameLayout
+          style="@style/dayTextContainer"
+          tools:ignore="Suspicious0dp">
+          <TextView
+            android:id="@+id/dayText22"
+            android:textColor="@color/white"
+            style="@style/dayText" />
+          <View
+            android:id="@+id/circleView22"
+            style="@style/month_circle"
+            android:visibility="gone" />
+        </FrameLayout>
         <View
           style="@style/horizontalBorder" />
         <FrameLayout
@@ -308,9 +477,17 @@
       <LinearLayout
         android:id="@+id/day23"
         style="@style/dayLayout">
-        <TextView
-          android:id="@+id/dayText23"
-          style="@style/dayText" />
+        <FrameLayout
+          style="@style/dayTextContainer"
+          tools:ignore="Suspicious0dp">
+          <TextView
+            android:id="@+id/dayText23"
+            style="@style/dayText" />
+          <View
+            android:id="@+id/circleView23"
+            style="@style/month_circle"
+            android:visibility="gone" />
+        </FrameLayout>
         <View
           style="@style/horizontalBorder" />
         <FrameLayout
@@ -320,9 +497,17 @@
       <LinearLayout
         android:id="@+id/day24"
         style="@style/dayLayout">
-        <TextView
-          android:id="@+id/dayText24"
-          style="@style/dayText" />
+        <FrameLayout
+          style="@style/dayTextContainer"
+          tools:ignore="Suspicious0dp">
+          <TextView
+            android:id="@+id/dayText24"
+            style="@style/dayText" />
+          <View
+            android:id="@+id/circleView24"
+            style="@style/month_circle"
+            android:visibility="gone" />
+        </FrameLayout>
         <View
           style="@style/horizontalBorder" />
         <FrameLayout
@@ -332,9 +517,17 @@
       <LinearLayout
         android:id="@+id/day25"
         style="@style/dayLayout">
-        <TextView
-          android:id="@+id/dayText25"
-          style="@style/dayText" />
+        <FrameLayout
+          style="@style/dayTextContainer"
+          tools:ignore="Suspicious0dp">
+          <TextView
+            android:id="@+id/dayText25"
+            style="@style/dayText" />
+          <View
+            android:id="@+id/circleView25"
+            style="@style/month_circle"
+            android:visibility="gone" />
+        </FrameLayout>
         <View
           style="@style/horizontalBorder" />
         <FrameLayout
@@ -344,9 +537,17 @@
       <LinearLayout
         android:id="@+id/day26"
         style="@style/dayLayout">
-        <TextView
-          android:id="@+id/dayText26"
-          style="@style/dayText" />
+        <FrameLayout
+          style="@style/dayTextContainer"
+          tools:ignore="Suspicious0dp">
+          <TextView
+            android:id="@+id/dayText26"
+            style="@style/dayText" />
+          <View
+            android:id="@+id/circleView26"
+            style="@style/month_circle"
+            android:visibility="gone" />
+        </FrameLayout>
         <View
           style="@style/horizontalBorder" />
         <FrameLayout
@@ -356,9 +557,17 @@
       <LinearLayout
         android:id="@+id/day27"
         style="@style/dayLayout">
-        <TextView
-          android:id="@+id/dayText27"
-          style="@style/dayText" />
+        <FrameLayout
+          style="@style/dayTextContainer"
+          tools:ignore="Suspicious0dp">
+          <TextView
+            android:id="@+id/dayText27"
+            style="@style/dayText" />
+          <View
+            android:id="@+id/circleView27"
+            style="@style/month_circle"
+            android:visibility="gone" />
+        </FrameLayout>
         <View
           style="@style/horizontalBorder" />
         <FrameLayout
@@ -368,11 +577,18 @@
       <LinearLayout
         android:id="@+id/day28"
         style="@style/dayLayout">
-        <TextView
-          android:id="@+id/dayText28"
-          android:background="@color/blue_white"
-          android:textColor="@color/white"
-          style="@style/dayText" />
+        <FrameLayout
+          style="@style/dayTextContainer"
+          tools:ignore="Suspicious0dp">
+          <TextView
+            android:id="@+id/dayText28"
+            android:textColor="@color/white"
+            style="@style/dayText" />
+          <View
+            android:id="@+id/circleView28"
+            style="@style/month_circle"
+            android:visibility="gone" />
+        </FrameLayout>
         <View
           style="@style/horizontalBorder" />
         <FrameLayout
@@ -387,11 +603,18 @@
       <LinearLayout
         android:id="@+id/day29"
         style="@style/dayLayout">
-        <TextView
-          android:id="@+id/dayText29"
-          android:background="@color/red_white"
-          android:textColor="@color/white"
-          style="@style/dayText" />
+        <FrameLayout
+          style="@style/dayTextContainer"
+          tools:ignore="Suspicious0dp">
+          <TextView
+            android:id="@+id/dayText29"
+            android:textColor="@color/white"
+            style="@style/dayText" />
+          <View
+            android:id="@+id/circleView29"
+            style="@style/month_circle"
+            android:visibility="gone" />
+        </FrameLayout>
         <View
           style="@style/horizontalBorder" />
         <FrameLayout
@@ -401,9 +624,17 @@
       <LinearLayout
         android:id="@+id/day30"
         style="@style/dayLayout">
-        <TextView
-          android:id="@+id/dayText30"
-          style="@style/dayText" />
+        <FrameLayout
+          style="@style/dayTextContainer"
+          tools:ignore="Suspicious0dp">
+          <TextView
+            android:id="@+id/dayText30"
+            style="@style/dayText" />
+          <View
+            android:id="@+id/circleView30"
+            style="@style/month_circle"
+            android:visibility="gone" />
+        </FrameLayout>
         <View
           style="@style/horizontalBorder" />
         <FrameLayout
@@ -413,9 +644,17 @@
       <LinearLayout
         android:id="@+id/day31"
         style="@style/dayLayout">
-        <TextView
-          android:id="@+id/dayText31"
-          style="@style/dayText" />
+        <FrameLayout
+          style="@style/dayTextContainer"
+          tools:ignore="Suspicious0dp">
+          <TextView
+            android:id="@+id/dayText31"
+            style="@style/dayText" />
+          <View
+            android:id="@+id/circleView31"
+            style="@style/month_circle"
+            android:visibility="gone" />
+        </FrameLayout>
         <View
           style="@style/horizontalBorder" />
         <FrameLayout
@@ -425,9 +664,17 @@
       <LinearLayout
         android:id="@+id/day32"
         style="@style/dayLayout">
-        <TextView
-          android:id="@+id/dayText32"
-          style="@style/dayText" />
+        <FrameLayout
+          style="@style/dayTextContainer"
+          tools:ignore="Suspicious0dp">
+          <TextView
+            android:id="@+id/dayText32"
+            style="@style/dayText" />
+          <View
+            android:id="@+id/circleView32"
+            style="@style/month_circle"
+            android:visibility="gone" />
+        </FrameLayout>
         <View
           style="@style/horizontalBorder" />
         <FrameLayout
@@ -437,9 +684,17 @@
       <LinearLayout
         android:id="@+id/day33"
         style="@style/dayLayout">
-        <TextView
-          android:id="@+id/dayText33"
-          style="@style/dayText" />
+        <FrameLayout
+          style="@style/dayTextContainer"
+          tools:ignore="Suspicious0dp">
+          <TextView
+            android:id="@+id/dayText33"
+            style="@style/dayText" />
+          <View
+            android:id="@+id/circleView33"
+            style="@style/month_circle"
+            android:visibility="gone" />
+        </FrameLayout>
         <View
           style="@style/horizontalBorder" />
         <FrameLayout
@@ -449,9 +704,17 @@
       <LinearLayout
         android:id="@+id/day34"
         style="@style/dayLayout">
-        <TextView
-          android:id="@+id/dayText34"
-          style="@style/dayText" />
+        <FrameLayout
+          style="@style/dayTextContainer"
+          tools:ignore="Suspicious0dp">
+          <TextView
+            android:id="@+id/dayText34"
+            style="@style/dayText" />
+          <View
+            android:id="@+id/circleView34"
+            style="@style/month_circle"
+            android:visibility="gone" />
+        </FrameLayout>
         <View
           style="@style/horizontalBorder" />
         <FrameLayout
@@ -461,11 +724,18 @@
       <LinearLayout
         android:id="@+id/day35"
         style="@style/dayLayout">
-        <TextView
-          android:id="@+id/dayText35"
-          android:background="@color/blue_white"
-          android:textColor="@color/white"
-          style="@style/dayText" />
+        <FrameLayout
+          style="@style/dayTextContainer"
+          tools:ignore="Suspicious0dp">
+          <TextView
+            android:id="@+id/dayText35"
+            android:textColor="@color/white"
+            style="@style/dayText" />
+          <View
+            android:id="@+id/circleView35"
+            style="@style/month_circle"
+            android:visibility="gone" />
+        </FrameLayout>
         <View
           style="@style/horizontalBorder" />
         <FrameLayout
