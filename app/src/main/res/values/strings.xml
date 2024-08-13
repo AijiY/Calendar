@@ -1,0 +1,33 @@
+<resources>
+  <string name="app_name">MyToDo</string>
+  <string name="exitButton">×</string>
+  <string name="storeButton">Store</string>
+  <string name="planRadioButton">Plan</string>
+  <string name="taskRadioButton">Task</string>
+  <string name="daySample">10</string>
+  <string name="allDay">AllDay</string>
+  <string name="inputHint">Input Title</string>
+  <string name="hour1"> 1:00</string>
+  <string name="hour2"> 2:00</string>
+  <string name="hour3"> 3:00</string>
+  <string name="hour4"> 4:00</string>
+  <string name="hour5"> 5:00</string>
+  <string name="hour6"> 6:00</string>
+  <string name="hour7"> 7:00</string>
+  <string name="hour8"> 8:00</string>
+  <string name="hour9"> 9:00</string>
+  <string name="hour10">10:00</string>
+  <string name="hour11">11:00</string>
+  <string name="hour12">12:00</string>
+  <string name="hour13">13:00</string>
+  <string name="hour14">14:00</string>
+  <string name="hour15">15:00</string>
+  <string name="hour16">16:00</string>
+  <string name="hour17">17:00</string>
+  <string name="hour18">18:00</string>
+  <string name="hour19">19:00</string>
+  <string name="hour20">20:00</string>
+  <string name="hour21">21:00</string>
+  <string name="hour22">22:00</string>
+  <string name="hour23">23:00</string>
+</resources>

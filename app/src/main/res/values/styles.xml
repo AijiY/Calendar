@@ -2,6 +2,9 @@
 <resources>
   <style name="CustomTabLayout" parent="Widget.Design.TabLayout">
     <item name="tabTextAppearance">@style/CustomTabTextAppearance</item>
+    <item name="android:background">@color/green</item>
+    <item name="tabTextColor">@color/white</item>
+    <item name="tabIndicatorColor">@color/white</item>
   </style>
 
   <style name="CustomTabTextAppearance" parent="TextAppearance.Design.Tab">
