@@ -27,8 +27,8 @@
     <item name="android:background">@drawable/add_button</item> <!-- カスタム背景を指定 -->
     <item name="android:layout_width">wrap_content</item> <!-- 横幅を自動調整 -->
     <item name="android:layout_height">wrap_content</item> <!-- 高さを自動調整 -->
-    <item name="android:minWidth">50dp</item> <!-- 最小幅を指定して正方形に近づける -->
-    <item name="android:minHeight">50dp</item> <!-- 最小高さを指定して正方形に近づける -->
+    <item name="android:minWidth">100dp</item> <!-- 最小幅を指定して正方形に近づける -->
+    <item name="android:minHeight">100dp</item> <!-- 最小高さを指定して正方形に近づける -->
   </style>
 
   <style name="exitButtonStyle">
