@@ -6,10 +6,23 @@
   android:layout_width="match_parent"
   android:layout_height="match_parent"
   tools:context=".MainActivity">
+  <Button
+    android:id="@+id/addButton"
+    style="@style/addButtonStyle"
+    android:layout_marginBottom="16dp"
+    android:layout_marginEnd="16dp"
+    android:text="@string/addButton"
+    android:textColor="@color/white"
+    android:textSize="48sp"
+    app:backgroundTint="@null"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent" />
   <LinearLayout
+    android:id="@+id/linearLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
     <com.google.android.material.tabs.TabLayout
       android:id="@+id/dateTypeTabLayout"
       style="@style/CustomTabLayout"
