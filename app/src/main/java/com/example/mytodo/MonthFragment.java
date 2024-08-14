@@ -72,11 +72,14 @@ public class MonthFragment extends Fragment {
     Calendar today = Calendar.getInstance();
     today.setTime(presentDate);
 
+    Date[] monthDates = new Date[35];
     // 日付の設定
     for (int i = 0; i < 35; i++) {
       TextView dayText = dayTexts[i];
       View circle = circles[i]; // CircleView を取得
       if (dayText != null) {
+        Calendar calendarForDate = (Calendar) calendar.clone(); // calendarをクローン
+
         int day = i - (startDayOfWeek - 1) + 1;
         int dayOfWeek = (i % 7) + 1; // 日曜日が1、土曜日が7
 
@@ -84,6 +87,11 @@ public class MonthFragment extends Fragment {
           // 前月の日付
           dayText.setText(String.valueOf(day + getDaysInPreviousMonth(calendar, startDayOfWeek - 1)));
           dayText.setTextColor(Color.LTGRAY); // 文字色を薄くする
+
+          // 前月の日付を設定
+          calendarForDate.add(Calendar.MONTH, -1);
+          calendarForDate.set(Calendar.DAY_OF_MONTH, day + getDaysInPreviousMonth(calendar, startDayOfWeek - 1));
+
           if (dayOfWeek == Calendar.SUNDAY) {
             dayText.setBackgroundColor(Color.parseColor("#FF9F9F")); // 薄い赤（red_white）
           } else if (dayOfWeek == Calendar.SATURDAY) {
@@ -97,6 +105,9 @@ public class MonthFragment extends Fragment {
           dayText.setText(String.valueOf(day));
           dayText.setTextColor(Color.BLACK); // 文字色を黒にする
           dayText.setBackgroundColor(Color.TRANSPARENT); // 背景色を透明にする
+          // 今月の日付を設定
+          calendarForDate.set(Calendar.DAY_OF_MONTH, day);
+
           // 色分け処理
           if ((i + 1) % 7 == 1) {
             // 1, 8, 15, ... を赤と白の中間色で塗りつぶす
@@ -108,7 +119,6 @@ public class MonthFragment extends Fragment {
             dayText.setTextColor(Color.WHITE);
           }
           // 現在の日付に対応する CircleView を表示
-          calendar.set(Calendar.DAY_OF_MONTH, day);
           if (calendar.get(Calendar.YEAR) == today.get(Calendar.YEAR) &&
               calendar.get(Calendar.MONTH) == today.get(Calendar.MONTH) &&
               calendar.get(Calendar.DAY_OF_MONTH) == today.get(Calendar.DAY_OF_MONTH)) {
@@ -120,6 +130,11 @@ public class MonthFragment extends Fragment {
           // 翌月の日付
           dayText.setText(String.valueOf(day - daysInMonth));
           dayText.setTextColor(Color.LTGRAY); // 文字色を薄くする
+
+          // 翌月の日付を設定
+          calendarForDate.add(Calendar.MONTH, 1);
+          calendarForDate.set(Calendar.DAY_OF_MONTH, day - daysInMonth);
+
           if (dayOfWeek == Calendar.SUNDAY) {
             dayText.setBackgroundColor(Color.parseColor("#FF9F9F")); // 薄い赤（red_white）
           } else if (dayOfWeek == Calendar.SATURDAY) {
@@ -129,6 +144,9 @@ public class MonthFragment extends Fragment {
           }
           circle.setVisibility(View.GONE); // 翌月の日付には CircleView を非表示
         }
+
+        // 設定された日付を monthDates に保存
+        monthDates[i] = calendarForDate.getTime();
       }
     }
 
