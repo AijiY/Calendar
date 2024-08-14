@@ -1,7 +1,10 @@
 package com.example.mytodo;
 
 import android.content.Context;
+import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,8 +23,11 @@ public class DayFragment extends Fragment {
   private static final String ARG_DATE = "showingDate";
   private Date showingDate;
 
-  private TabLayout dateTypeTabLayout;
   private GestureDetector gestureDetector;
+
+  // ボタンのクリック処理が連続して発火しないようにするためのフラグ
+  private boolean isButtonClicked = false;
+  private static final long DEBOUNCE_DELAY_MS = 300; // デバウンス遅延時間（ミリ秒）
 
   public DayFragment() {
   }
@@ -62,13 +68,43 @@ public class DayFragment extends Fragment {
 
     // ScrollView に OnTouchListener を設定
     scrollView.setOnTouchListener((v, event) -> {
-      if (gestureDetector.onTouchEvent(event)) {
-        // 横スワイプを検出した場合、ScrollView のスクロールを無効にする
-        return true;
-      } else {
-        // 縦スワイプの場合、ScrollView のデフォルトのスクロールを許可する
-        return v.onTouchEvent(event);
+      boolean isGestureDetected = gestureDetector.onTouchEvent(event);
+
+      // タッチイベントの座標を取得
+      float x = event.getX();
+      float y = event.getY();
+
+      // ボタンの位置とサイズを取得
+      Rect buttonRect = new Rect();
+      mainActivity.addButton.getHitRect(buttonRect);
+      // Rect の領域を広げる（ここでは 10dp を追加）
+      int padding = (int) (32 * mainActivity.getResources().getDisplayMetrics().density); // dp to pixels
+      buttonRect.inset(-padding, -padding); // 領域を広げる
+
+      // タッチがボタンの領域内にあるかどうかをチェック
+      if (buttonRect.contains((int) x, (int) y)) {
+        // ボタンがタッチされた場合
+        if (!isButtonClicked) {
+          isButtonClicked = true;
+          mainActivity.addButton.performClick();
+
+          // デバウンス処理のために、一定時間後にフラグをリセット
+          new Handler().postDelayed(() -> isButtonClicked = false, DEBOUNCE_DELAY_MS);
+
+          // イベントを消費して、スクロールを無効にする
+          return true;
+        }
       }
+
+      // ジェスチャーが検出された場合（横スワイプ）
+      if (isGestureDetected) {
+        // 横スワイプの場合、スクロールを無効にする
+        return true;
+      }
+
+      // それ以外の場合、ScrollView のスクロール処理を許可する
+      return v.onTouchEvent(event);
+
     });
 
     return rootView;

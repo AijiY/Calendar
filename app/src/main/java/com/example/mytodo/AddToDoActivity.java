@@ -3,6 +3,8 @@ package com.example.mytodo;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
+
+import android.util.Log;
 import android.widget.EditText;
 import androidx.appcompat.app.AppCompatActivity;
 import java.text.SimpleDateFormat;
@@ -10,7 +12,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
-public class CreateToDoActivity extends AppCompatActivity {
+public class AddToDoActivity extends AppCompatActivity {
   private EditText editStartDate;
   private EditText editEndDate;
   private EditText editStartTime;
@@ -22,7 +24,7 @@ public class CreateToDoActivity extends AppCompatActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_create_todo);
+    setContentView(R.layout.activity_add_to_do);
 
     editStartDate = findViewById(R.id.editStartDate);
     editEndDate = findViewById(R.id.editEndDate);
@@ -56,18 +58,17 @@ public class CreateToDoActivity extends AppCompatActivity {
     editEndDate.setOnClickListener(v -> showDatePicker(calendarEnd, editEndDate));
     editStartTime.setOnClickListener(v -> showTimePicker(calendarStart, editStartTime));
     editEndTime.setOnClickListener(v -> showTimePicker(calendarEnd, editEndTime));
-
   }
 
   private void showDatePicker(Calendar calendar, EditText editText) {
-    new DatePickerDialog(CreateToDoActivity.this, (view, year, month, dayOfMonth) -> {
+    new DatePickerDialog(AddToDoActivity.this, (view, year, month, dayOfMonth) -> {
       calendar.set(year, month, dayOfMonth);
       updateDateLabel(editText, calendar);
     }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
   }
 
   private void showTimePicker(Calendar calendar, EditText editText) {
-    new TimePickerDialog(CreateToDoActivity.this, (view, hourOfDay, minute) -> {
+    new TimePickerDialog(AddToDoActivity.this, (view, hourOfDay, minute) -> {
       calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
       calendar.set(Calendar.MINUTE, minute);
       updateTimeLabel(editText, calendar);
@@ -83,5 +84,4 @@ public class CreateToDoActivity extends AppCompatActivity {
     SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
     editText.setText(sdf.format(calendar.getTime()));
   }
-
 }

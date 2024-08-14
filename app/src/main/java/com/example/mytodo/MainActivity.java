@@ -1,9 +1,16 @@
 package com.example.mytodo;
 
+import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
 
+import android.os.Handler;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.view.View;
+import android.widget.Button;
+import android.widget.FrameLayout;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -19,6 +26,11 @@ public class MainActivity extends AppCompatActivity {
 
   private TabLayout dateTypeTabLayout;
   private GestureDetector gestureDetector;
+  public Button addButton;
+  private FrameLayout toDoDisplay;
+
+  private static final int DEBOUNCE_DELAY_MS = 300;
+  private boolean isButtonClicked = false;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +38,8 @@ public class MainActivity extends AppCompatActivity {
     setContentView(R.layout.activity_main);
 
     dateTypeTabLayout = findViewById(R.id.dateTypeTabLayout);
+    addButton = findViewById(R.id.addButton);
+    toDoDisplay = findViewById(R.id.toDoDisplay);
 
     // 初期設定: 3番目のタブを選択し、showingDateに基づいて文字を更新
     dateTypeTabLayout.getTabAt(2).select(); // タブの3番目（インデックス2）を選択
@@ -40,6 +54,11 @@ public class MainActivity extends AppCompatActivity {
     dateTypeTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
       @Override
       public void onTabSelected(@NonNull TabLayout.Tab tab) {
+        // タブが選択されたときに addButton のプロパティを取得
+        Rect buttonRect = new Rect();
+        addButton.getHitRect(buttonRect);
+        Log.d("ButtonRect", "Button Rect: " + buttonRect.toShortString());
+        Log.d("ButtonVisibility", "Button Visibility: " + (addButton.getVisibility() == View.VISIBLE ? "VISIBLE" : "GONE"));
         // タブが選択されたときに、タブの位置に応じて画面を表示
         int tabPosition = tab.getPosition();
 
@@ -51,12 +70,12 @@ public class MainActivity extends AppCompatActivity {
 
 //        タブがDayタブ以外の場合、スワイプジェスチャーを有効にする（DayのスワイプはDayFragmentで設定）
         if (tabPosition != 2) { // Dayタブ以外が選択された場合
-          findViewById(R.id.toDoDisplay).setOnTouchListener((v, event) -> {
+          toDoDisplay.setOnTouchListener((v, event) -> {
             gestureDetector.onTouchEvent(event);
             return true;
           });
         } else {
-          findViewById(R.id.toDoDisplay).setOnTouchListener(null);
+          toDoDisplay.setOnTouchListener(null);
         }
       }
       @Override
@@ -68,6 +87,48 @@ public class MainActivity extends AppCompatActivity {
       public void onTabReselected(@NonNull TabLayout.Tab tab) {
         // タブが再選択されたときの処理（必要なら追加）
       }
+    });
+
+    // ここでタッチリスナーを設定（クリックの優先設定）
+    toDoDisplay.setOnTouchListener((v, event) -> {
+      boolean isGestureDetected = gestureDetector.onTouchEvent(event);
+
+      // タッチイベントの座標を取得
+      float x = event.getX();
+      float y = event.getY();
+
+      // ボタンの位置とサイズを取得
+      Rect buttonRect = new Rect();
+      addButton.getHitRect(buttonRect);
+      // Rect の領域を広げる（ここでは 10dp を追加）
+      int padding = (int) (32 * this.getResources().getDisplayMetrics().density); // dp to pixels
+      buttonRect.inset(-padding, -padding); // 領域を広げる
+
+      // タッチがボタンの領域内にあるかどうかをチェック
+      if (buttonRect.contains((int) x, (int) y)) {
+        // ボタンがタッチされた場合
+        if (!isButtonClicked) {
+          isButtonClicked = true;
+          addButton.performClick();
+
+          // デバウンス処理のために、一定時間後にフラグをリセット
+          new Handler().postDelayed(() -> isButtonClicked = false, DEBOUNCE_DELAY_MS);
+
+          // イベントを消費して、スワイプを無効にする
+          return true;
+        }
+      }
+
+      // 横スワイプ
+      return true;
+
+
+    });
+
+//    ボタンクリックイベント
+    addButton.setOnClickListener(v -> {
+      Intent intent = new Intent(MainActivity.this, AddToDoActivity.class);
+      startActivity(intent);
     });
 
 
@@ -134,8 +195,22 @@ public class MainActivity extends AppCompatActivity {
   }
 
   public class GestureListener extends GestureDetector.SimpleOnGestureListener {
-    private static final int SWIPE_THRESHOLD = 100;
-    private static final int SWIPE_VELOCITY_THRESHOLD = 100;
+    private static final int SWIPE_THRESHOLD = 50;
+    private static final int SWIPE_VELOCITY_THRESHOLD = 50;
+
+    public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+      // 縦スクロールのしきい値を厳しくする
+      if (Math.abs(distanceX) > Math.abs(distanceY) && Math.abs(distanceX) > SWIPE_THRESHOLD) {
+        // 横スクロールを検出
+        return true;
+      }
+      // 縦スクロールのしきい値を厳しくする
+      if (Math.abs(distanceY) > SWIPE_THRESHOLD) {
+        // 縦スクロールを許可
+        return false;
+      }
+      return super.onScroll(e1, e2, distanceX, distanceY);
+    }
 
     @Override
     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
