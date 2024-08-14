@@ -32,6 +32,10 @@ public class MainActivity extends AppCompatActivity {
     updateTextViewBasedOnDate(showingDate);
     displayFragmentForTab(dateTypeTabLayout.getSelectedTabPosition());
 
+    // GestureDetectorの設定
+    gestureDetector = new GestureDetector(this, new GestureListener());
+
+
     // タブのクリックリスナー設定
     dateTypeTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
       @Override
@@ -44,6 +48,16 @@ public class MainActivity extends AppCompatActivity {
 
         // タブの位置に応じて適切なフラグメントを作成
         displayFragmentForTab(tabPosition);
+
+//        タブがDayタブ以外の場合、スワイプジェスチャーを有効にする（DayのスワイプはDayFragmentで設定）
+        if (tabPosition != 2) { // Dayタブ以外が選択された場合
+          findViewById(R.id.toDoDisplay).setOnTouchListener((v, event) -> {
+            gestureDetector.onTouchEvent(event);
+            return true;
+          });
+        } else {
+          findViewById(R.id.toDoDisplay).setOnTouchListener(null);
+        }
       }
       @Override
       public void onTabUnselected(@NonNull TabLayout.Tab tab) {
@@ -56,15 +70,10 @@ public class MainActivity extends AppCompatActivity {
       }
     });
 
-    // GestureDetectorの設定
-    gestureDetector = new GestureDetector(this, new GestureListener());
-    findViewById(R.id.toDoDisplay).setOnTouchListener((v, event) -> {
-      gestureDetector.onTouchEvent(event);
-      return true;
-    });
+
   }
 
-  private void updateTextViewBasedOnDate(Date date) {
+  public void updateTextViewBasedOnDate(Date date) {
     Calendar calendar = Calendar.getInstance();
     calendar.setTime(date);
 
@@ -100,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
     }
   }
 
-  private void displayFragmentForTab(int tabPosition) {
+  public void displayFragmentForTab(int tabPosition) {
     Fragment fragment;
 
     switch (tabPosition) {
@@ -114,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
         fragment = DayFragment.newInstance(showingDate);
         break;
       default:
-        fragment = MonthFragment.newInstance(showingDate); // デフォルトのフラグメント
+        fragment = DayFragment.newInstance(showingDate); // デフォルトのフラグメント
         break;
     }
 
@@ -124,7 +133,7 @@ public class MainActivity extends AppCompatActivity {
         .commit();
   }
 
-  private class GestureListener extends GestureDetector.SimpleOnGestureListener {
+  public class GestureListener extends GestureDetector.SimpleOnGestureListener {
     private static final int SWIPE_THRESHOLD = 100;
     private static final int SWIPE_VELOCITY_THRESHOLD = 100;
 
@@ -137,10 +146,10 @@ public class MainActivity extends AppCompatActivity {
       if (Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
         if (e1.getX() - e2.getX() > SWIPE_THRESHOLD) {
           // 左スワイプ: 次の月、週、日
-          switchTab(1);
+          updateFragmentWithSwipe(1);
         } else if (e2.getX() - e1.getX() > SWIPE_THRESHOLD) {
           // 右スワイプ: 前の月、週、日
-          switchTab(-1);
+          updateFragmentWithSwipe(-1);
         }
         return true;
       }
@@ -148,7 +157,7 @@ public class MainActivity extends AppCompatActivity {
     }
   }
 
-  private void switchTab(int direction) {
+  public void updateFragmentWithSwipe(int direction) {
     // 現在のタブを取得
     int currentTab = dateTypeTabLayout.getSelectedTabPosition();
 
@@ -172,7 +181,7 @@ public class MainActivity extends AppCompatActivity {
     displayFragmentForTab(currentTab);
   }
 
-  private Date addMonths(Date date, int amount) {
+  public Date addMonths(Date date, int amount) {
     Calendar calendar = Calendar.getInstance();
     calendar.setTime(date);
     calendar.add(Calendar.MONTH, amount);
@@ -180,7 +189,7 @@ public class MainActivity extends AppCompatActivity {
     return calendar.getTime();
   }
 
-  private Date addWeeks(Date date, int amount) {
+  public Date addWeeks(Date date, int amount) {
     Calendar calendar = Calendar.getInstance();
     calendar.setTime(date);
     calendar.add(Calendar.WEEK_OF_YEAR, amount);
@@ -188,14 +197,14 @@ public class MainActivity extends AppCompatActivity {
     return calendar.getTime();
   }
 
-  private Date addDays(Date date, int amount) {
+  public Date addDays(Date date, int amount) {
     Calendar calendar = Calendar.getInstance();
     calendar.setTime(date);
     calendar.add(Calendar.DAY_OF_MONTH, amount);
     return calendar.getTime();
   }
 
-  public static String getOrdinalDate(int dayOfMonth) {
+  public String getOrdinalDate(int dayOfMonth) {
     String[] suffixes = {"th", "st", "nd", "rd"};
     int j = dayOfMonth % 10;
     int k = dayOfMonth % 100;
@@ -214,7 +223,7 @@ public class MainActivity extends AppCompatActivity {
     return dayOfMonth + suffix;
   }
 
-  public static String getWeekDayRange(Date startDate, Date endDate) {
+  public String getWeekDayRange(Date startDate, Date endDate) {
     SimpleDateFormat dateFormat = new SimpleDateFormat("d", Locale.getDefault());
     int startDay = Integer.parseInt(dateFormat.format(startDate));
     int endDay = Integer.parseInt(dateFormat.format(endDate));
@@ -222,3 +231,4 @@ public class MainActivity extends AppCompatActivity {
     return getOrdinalDate(startDay) + "-" + getOrdinalDate(endDay);
   }
 }
+

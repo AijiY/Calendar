@@ -3,7 +3,7 @@
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="match_parent">
-  <androidx.core.widget.NestedScrollView
+  <ScrollView
     android:id="@+id/dayScrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -422,5 +422,5 @@
           android:background="@color/grey" />
       </LinearLayout>
     </LinearLayout>
-  </androidx.core.widget.NestedScrollView>
+  </ScrollView>
 </FrameLayout>
