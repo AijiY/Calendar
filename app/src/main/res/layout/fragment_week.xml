@@ -4,6 +4,7 @@
   android:layout_height="match_parent" >
 
   <LinearLayout
+    android:id="@+id/weekLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -18,6 +19,7 @@
           android:id="@+id/SunTextView"
           style="@style/weekdayTextView"
           android:background="@color/red_white"
+          android:clickable="true"
           android:textColor="@color/white" />
         <View
           android:id="@+id/sunCircleView"
@@ -41,6 +43,7 @@
         android:layout_weight="1">
         <TextView
           android:id="@+id/MonTextView"
+          android:clickable="true"
           style="@style/weekdayTextView" />
         <View
           android:id="@+id/monCircleView"
@@ -64,6 +67,7 @@
         android:layout_weight="1">
         <TextView
           android:id="@+id/TueTextView"
+          android:clickable="true"
           style="@style/weekdayTextView" />
         <View
           android:id="@+id/tueCircleView"
@@ -87,6 +91,7 @@
         android:layout_weight="1">
         <TextView
           android:id="@+id/WedTextView"
+          android:clickable="true"
           style="@style/weekdayTextView" />
         <View
           android:id="@+id/wedCircleView"
@@ -110,6 +115,7 @@
         android:layout_weight="1">
         <TextView
           android:id="@+id/ThuTextView"
+          android:clickable="true"
           style="@style/weekdayTextView" />
         <View
           android:id="@+id/thuCircleView"
@@ -133,6 +139,7 @@
         android:layout_weight="1">
         <TextView
           android:id="@+id/FriTextView"
+          android:clickable="true"
           style="@style/weekdayTextView" />
         <View
           android:id="@+id/friCircleView"
@@ -157,6 +164,7 @@
         <TextView
           android:id="@+id/SatTextView"
           style="@style/weekdayTextView"
+          android:clickable="true"
           android:background="@color/blue_white"
           android:textColor="@color/white" />
         <View

@@ -24,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
   public static final Date presentDate = new Date();
   public static Date showingDate = presentDate;
 
-  private TabLayout dateTypeTabLayout;
+  public static TabLayout dateTypeTabLayout;
   private GestureDetector gestureDetector;
   public Button addButton;
   private FrameLayout toDoDisplay;
@@ -46,19 +46,14 @@ public class MainActivity extends AppCompatActivity {
     updateTextViewBasedOnDate(showingDate);
     displayFragmentForTab(dateTypeTabLayout.getSelectedTabPosition());
 
-    // GestureDetectorの設定
-    gestureDetector = new GestureDetector(this, new GestureListener());
+//    // GestureDetectorの設定
+//    gestureDetector = new GestureDetector(this, new GestureListener());
 
 
     // タブのクリックリスナー設定
     dateTypeTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
       @Override
       public void onTabSelected(@NonNull TabLayout.Tab tab) {
-        // タブが選択されたときに addButton のプロパティを取得
-        Rect buttonRect = new Rect();
-        addButton.getHitRect(buttonRect);
-        Log.d("ButtonRect", "Button Rect: " + buttonRect.toShortString());
-        Log.d("ButtonVisibility", "Button Visibility: " + (addButton.getVisibility() == View.VISIBLE ? "VISIBLE" : "GONE"));
         // タブが選択されたときに、タブの位置に応じて画面を表示
         int tabPosition = tab.getPosition();
 
@@ -68,15 +63,15 @@ public class MainActivity extends AppCompatActivity {
         // タブの位置に応じて適切なフラグメントを作成
         displayFragmentForTab(tabPosition);
 
-//        タブがDayタブ以外の場合、スワイプジェスチャーを有効にする（DayのスワイプはDayFragmentで設定）
-        if (tabPosition != 2) { // Dayタブ以外が選択された場合
-          toDoDisplay.setOnTouchListener((v, event) -> {
-            gestureDetector.onTouchEvent(event);
-            return true;
-          });
-        } else {
-          toDoDisplay.setOnTouchListener(null);
-        }
+////        タブがDayタブ以外の場合、スワイプジェスチャーを有効にする（DayのスワイプはDayFragmentで設定）
+//        if (tabPosition != 2) { // Dayタブ以外が選択された場合
+//          toDoDisplay.setOnTouchListener((v, event) -> {
+//            gestureDetector.onTouchEvent(event);
+//            return true;
+//          });
+//        } else {
+//          toDoDisplay.setOnTouchListener(null);
+//        }
       }
       @Override
       public void onTabUnselected(@NonNull TabLayout.Tab tab) {

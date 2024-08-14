@@ -1,9 +1,14 @@
 package com.example.mytodo;
 
+import android.content.Context;
+import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Handler;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,9 +19,17 @@ import java.util.Date;
 import java.util.Locale;
 
 public class WeekFragment extends Fragment {
+  private MainActivity mainActivity;
+
   private static final String ARG_DATE = "showingDate";
   private Date showingDate;
   private Date presentDate = MainActivity.presentDate;
+
+  private GestureDetector gestureDetector;
+
+  // ボタンのクリック処理が連続して発火しないようにするためのフラグ
+  private boolean isButtonClicked = false;
+  private static final long DEBOUNCE_DELAY_MS = 300; // デバウンス遅延時間（ミリ秒）
 
   public WeekFragment() {
   }
@@ -27,6 +40,17 @@ public class WeekFragment extends Fragment {
     args.putSerializable(ARG_DATE, showingDate);
     fragment.setArguments(args);
     return fragment;
+  }
+
+  @Override
+  public void onAttach(Context context) {
+    super.onAttach(context);
+    if (context instanceof MainActivity) {
+      mainActivity = (MainActivity) context; // contextをMainActivityにキャスト
+    } else {
+      throw new RuntimeException(context.toString()
+          + " must be an instance of MainActivity");
+    }
   }
 
   @Override
@@ -86,7 +110,56 @@ public class WeekFragment extends Fragment {
     setDateAndHighlight(friTextView, friCircleView, weekDates[5]);
     setDateAndHighlight(satTextView, satCircleView, weekDates[6]);
 
+//    ここからTextViewにDayFragmentに移動するためのクリックイベントを設定
+    gestureDetector = new GestureDetector(getContext(), mainActivity.new GestureListener());
+    LinearLayout weekLayout = view.findViewById(R.id.weekLayout);
+    TextView[] textViews = {sunTextView, monTextView, tueTextView, wedTextView, thuTextView, friTextView, satTextView};
 
+    weekLayout.setOnTouchListener((v, event) -> {
+      boolean isGestureDetected = gestureDetector.onTouchEvent(event);
+
+      // タッチイベントの座標を取得
+      float x = event.getX();
+      float y = event.getY();
+
+      // ボタンの位置とサイズを取得
+      Rect buttonRect = new Rect();
+
+      for (TextView textView : textViews) {
+        textView.getHitRect(buttonRect);
+        // タッチがボタンの領域内にあるかどうかをチェック
+        if (buttonRect.contains((int) x, (int) y)) {
+          // ボタンがタッチされた場合
+          if (!isButtonClicked) {
+            isButtonClicked = true;
+            textView.performClick();
+
+            // デバウンス処理のために、一定時間後にフラグをリセット
+            new Handler().postDelayed(() -> isButtonClicked = false, DEBOUNCE_DELAY_MS);
+
+            // イベントを消費して、スクロールを無効にする
+            return true;
+          }
+        }
+      }
+
+      // 横スワイプ
+      return true;
+    });
+
+    for (int i = 0; i < textViews.length; i++) {
+      final Date newShowingDate = weekDates[i];
+      textViews[i].setOnClickListener(v -> {
+//        showingDateに1日加算
+        Calendar calendarForShowingDate = Calendar.getInstance();
+        calendarForShowingDate.setTime(newShowingDate);
+        mainActivity.showingDate = calendarForShowingDate.getTime();
+//        DayFragment作成
+        mainActivity.dateTypeTabLayout.getTabAt(2).select(); // タブの3番目（インデックス2）を選択
+        mainActivity.updateTextViewBasedOnDate(mainActivity.showingDate);
+        mainActivity.displayFragmentForTab(mainActivity.dateTypeTabLayout.getSelectedTabPosition());
+      });
+    }
 
     return view;
   }
