@@ -132,6 +132,8 @@ public class MainActivity extends AppCompatActivity {
       startActivity(intent);
     });
 
+    Log.d("ShowingDate",showingDate.toString());
+
 
   }
 
@@ -249,6 +251,8 @@ public class MainActivity extends AppCompatActivity {
         showingDate = addDays(showingDate, direction);
         break;
     }
+    Log.d("ShowingDate",showingDate.toString());
+
 
     // 日付に基づいてタブの内容を更新
     updateTextViewBasedOnDate(showingDate);
