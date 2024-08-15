@@ -17,13 +17,18 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import com.google.android.material.tabs.TabLayout;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
   public static final Date presentDate = new Date();
   public static Date showingDate = presentDate;
+
+  public static List<Plan> plans = new ArrayList<>();
+  public static List<Task> tasks = new ArrayList<>();
 
   public static TabLayout dateTypeTabLayout;
   private GestureDetector gestureDetector;

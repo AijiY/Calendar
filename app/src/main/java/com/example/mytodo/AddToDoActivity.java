@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.Switch;
 import androidx.appcompat.app.AppCompatActivity;
+import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -45,6 +46,8 @@ public class AddToDoActivity extends AppCompatActivity {
     LinearLayout endTimeContainer = findViewById(R.id.endTimeContainer);
     TextInputLayout startTimeLayout = findViewById(R.id.startTimeLayout);
     TextInputLayout endTimeLayout = findViewById(R.id.endTimeLayout);
+    TextInputEditText titleInput = findViewById(R.id.titleInput);
+    TextInputEditText detailsInput = findViewById(R.id.detailsInput);
 
     exitButton.setOnClickListener(v -> {
       Intent intent = new Intent(AddToDoActivity.this, MainActivity.class);
@@ -53,16 +56,16 @@ public class AddToDoActivity extends AppCompatActivity {
       finish(); // AddToDoActivity を終了
     });
 
-    storeButton.setOnClickListener(v -> {
-      // タスクの保存処理
-      Log.d("AddToDoActivity", "storeButton clicked");
-    });
+
 
     taskRadioButton.setOnCheckedChangeListener((buttonView, isChecked) -> {
       if (isChecked) {
         endTimeContainer.setVisibility(View.GONE);
+        allDaySwitch.setChecked(false);
+        allDaySwitch.setVisibility(View.GONE);
       } else {
         endTimeContainer.setVisibility(View.VISIBLE);
+        allDaySwitch.setVisibility(View.VISIBLE);
       }
     });
 
@@ -107,6 +110,53 @@ public class AddToDoActivity extends AppCompatActivity {
     editEndDate.setOnClickListener(v -> showEndDatePicker(calendarEnd, editEndDate, calendarStart));
     editStartTime.setOnClickListener(v -> showStartTimePicker(calendarStart, editStartTime, calendarEnd, editEndTime, editEndDate));
     editEndTime.setOnClickListener(v -> showEndTimePicker(calendarEnd, editEndTime, calendarStart));
+
+    // タスクの保存処理
+    storeButton.setOnClickListener(v -> {
+      String title = titleInput.getText().toString();
+      String details = detailsInput.getText().toString();
+      if (title.isEmpty()) {
+        // タイトルが空の場合、警告ダイアログを表示
+        new AlertDialog.Builder(AddToDoActivity.this)
+            .setTitle("Warning")
+            .setMessage("Input title.")
+            .setPositiveButton("OK", (dialog, which) -> dialog.dismiss()) // OKボタンでダイアログを閉じる
+            .show();
+        return; // 処理を終了してリスナーを抜ける
+      }
+      if (planRadioButton.isChecked()) {
+        // allDaySwitch がチェックされている場合の処理
+        if (allDaySwitch.isChecked()) {
+          // calendarStart を 0時に設定
+          calendarStart.set(Calendar.HOUR_OF_DAY, 0);
+          calendarStart.set(Calendar.MINUTE, 0);
+          calendarStart.set(Calendar.SECOND, 0);
+          calendarStart.set(Calendar.MILLISECOND, 0);
+
+          // calendarEnd を翌日の0時に設定
+          Calendar endDate = (Calendar) calendarStart.clone(); // calendarStart をクローン
+          endDate.add(Calendar.DAY_OF_MONTH, 1); // 1日追加
+          endDate.set(Calendar.HOUR_OF_DAY, 0);
+          endDate.set(Calendar.MINUTE, 0);
+          endDate.set(Calendar.SECOND, 0);
+          endDate.set(Calendar.MILLISECOND, 0);
+
+          calendarEnd.setTime(endDate.getTime()); // calendarEnd に設定
+        }
+
+        // デバッグ用に出力
+        Log.d("DEBUG", "Adjusted Start Date: " + calendarStart.getTime());
+        Log.d("DEBUG", "Adjusted End Date: " + calendarEnd.getTime());
+        MainActivity.plans.add(new Plan(title, details, calendarStart, calendarEnd, allDaySwitch.isChecked()));
+      } else {
+        MainActivity.tasks.add(new Task(title, details, calendarStart));
+      }
+
+      Intent intent = new Intent(AddToDoActivity.this, MainActivity.class);
+      intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+      startActivity(intent);
+      finish(); // AddToDoActivity を終了
+    });
   }
 
   private void showEndDatePicker(Calendar calendarEnd, EditText editEndDate, Calendar calendarStart) {
@@ -118,7 +168,7 @@ public class AddToDoActivity extends AppCompatActivity {
       calendarEnd.set(year, month, dayOfMonth);
 
       // 逆転チェック
-      if (calendarEnd.before(calendarStart)) {
+      if (calendarEnd.before(calendarStart) || calendarEnd.equals(calendarStart)) {
         // 逆転している場合、ユーザーに警告を表示
         new AlertDialog.Builder(AddToDoActivity.this)
             .setTitle("Warning")
@@ -148,7 +198,7 @@ public class AddToDoActivity extends AppCompatActivity {
       calendarEnd.set(Calendar.MINUTE, minute);
 
       // 逆転チェック
-      if (calendarEnd.before(calendarStart)) {
+      if (calendarEnd.before(calendarStart) || calendarEnd.equals(calendarStart)) {
         // 逆転している場合、ユーザーに警告を表示
         new AlertDialog.Builder(AddToDoActivity.this)
             .setTitle("Warning")
