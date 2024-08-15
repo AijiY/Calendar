@@ -9,12 +9,14 @@ import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ScrollView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.example.mytodo.MainActivity.GestureListener;
 import com.google.android.material.tabs.TabLayout;
+import java.util.Calendar;
 import java.util.Date;
 
 public class DayFragment extends Fragment {
@@ -53,10 +55,31 @@ public class DayFragment extends Fragment {
 
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-    View rootView = inflater.inflate(R.layout.fragment_day, container, false);
+    View view = inflater.inflate(R.layout.fragment_day, container, false);
 
     gestureDetector = new GestureDetector(getContext(), mainActivity.new GestureListener());
-    ScrollView scrollView = rootView.findViewById(R.id.dayScrollView);
+    ScrollView scrollView = view.findViewById(R.id.dayScrollView);
+
+// GlobalLayoutListener を使用してレイアウト完了後にスクロール位置を設定する
+    scrollView.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+      @Override
+      public void onGlobalLayout() {
+        // hour を showingDate から取得する
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(mainActivity.showingDate);
+        int hour = calendar.get(Calendar.HOUR_OF_DAY);
+
+        // dp からピクセルへ変換
+        float density = view.getContext().getResources().getDisplayMetrics().density; // 修正ポイント
+        int yPosition = (int) (80 * hour * density);
+
+        // 縦方向に yPosition までスクロール
+        scrollView.scrollTo(0, yPosition);
+
+        // リスナーの登録解除
+        scrollView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+      }
+    });
 
     // ScrollView に OnTouchListener を設定
     scrollView.setOnTouchListener((v, event) -> {
@@ -99,6 +122,6 @@ public class DayFragment extends Fragment {
 
     });
 
-    return rootView;
+    return view;
   }
 }
