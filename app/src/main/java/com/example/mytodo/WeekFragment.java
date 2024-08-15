@@ -21,10 +21,6 @@ import java.util.Locale;
 public class WeekFragment extends Fragment {
   private MainActivity mainActivity;
 
-  private static final String ARG_DATE = "showingDate";
-  private Date showingDate;
-  private Date presentDate = MainActivity.presentDate;
-
   private GestureDetector gestureDetector;
 
   // ボタンのクリック処理が連続して発火しないようにするためのフラグ
@@ -34,11 +30,9 @@ public class WeekFragment extends Fragment {
   public WeekFragment() {
   }
 
-  public static WeekFragment newInstance(Date showingDate) {
+  public static WeekFragment newInstance() {
     WeekFragment fragment = new WeekFragment();
     Bundle args = new Bundle();
-    args.putSerializable(ARG_DATE, showingDate);
-    fragment.setArguments(args);
     return fragment;
   }
 
@@ -56,9 +50,6 @@ public class WeekFragment extends Fragment {
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    if (getArguments() != null) {
-      showingDate = (Date) getArguments().getSerializable(ARG_DATE);
-    }
   }
 
   @Override
@@ -89,7 +80,7 @@ public class WeekFragment extends Fragment {
 
     // カレンダーを使って週の日付を計算
     Calendar calendar = Calendar.getInstance();
-    calendar.setTime(showingDate);
+    calendar.setTime(mainActivity.showingDate);
 
     // 週の始まり (日曜日) から始める
     calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
@@ -100,20 +91,17 @@ public class WeekFragment extends Fragment {
       weekDates[i] = calendar.getTime();
       calendar.add(Calendar.DAY_OF_YEAR, 1);
     }
+    TextView[] textViews = {sunTextView, monTextView, tueTextView, wedTextView, thuTextView, friTextView, satTextView};
+    View[] circleViews = {sunCircleView, monCircleView, tueCircleView, wedCircleView, thuCircleView, friCircleView, satCircleView};
 
     // 曜日ごとに日付を設定し、presentDate と一致する場合は円形を表示
-    setDateAndHighlight(sunTextView, sunCircleView, weekDates[0]);
-    setDateAndHighlight(monTextView, monCircleView, weekDates[1]);
-    setDateAndHighlight(tueTextView, tueCircleView, weekDates[2]);
-    setDateAndHighlight(wedTextView, wedCircleView, weekDates[3]);
-    setDateAndHighlight(thuTextView, thuCircleView, weekDates[4]);
-    setDateAndHighlight(friTextView, friCircleView, weekDates[5]);
-    setDateAndHighlight(satTextView, satCircleView, weekDates[6]);
+    for (int i = 0; i < textViews.length; i++) {
+      setDateAndHighlight(textViews[i], circleViews[i], weekDates[i]);
+    }
 
 //    ここからTextViewにDayFragmentに移動するためのクリックイベントを設定
     gestureDetector = new GestureDetector(getContext(), mainActivity.new GestureListener());
     LinearLayout weekLayout = view.findViewById(R.id.weekLayout);
-    TextView[] textViews = {sunTextView, monTextView, tueTextView, wedTextView, thuTextView, friTextView, satTextView};
 
     weekLayout.setOnTouchListener((v, event) -> {
       boolean isGestureDetected = gestureDetector.onTouchEvent(event);
@@ -166,7 +154,7 @@ public class WeekFragment extends Fragment {
 
   private void setDateAndHighlight(TextView textView, View circleView, Date date) {
     textView.setText(formatDate(date));
-    if (isSameDay(date, presentDate)) {
+    if (isSameDay(date, mainActivity.presentDate)) {
       circleView.setVisibility(View.VISIBLE); // presentDate と一致する場合、円形の View を表示
     } else {
       circleView.setVisibility(View.GONE); // 他のテキストビューは円形の View を非表示

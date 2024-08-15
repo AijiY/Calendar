@@ -20,10 +20,6 @@ import java.util.Date;
 public class MonthFragment extends Fragment {
   private MainActivity mainActivity;
 
-  private static final String ARG_DATE = "showingDate";
-  private Date showingDate;
-  private Date presentDate = MainActivity.presentDate;
-
   private GestureDetector gestureDetector;
 
   // ボタンのクリック処理が連続して発火しないようにするためのフラグ
@@ -32,11 +28,9 @@ public class MonthFragment extends Fragment {
 
   public MonthFragment() {
   }
-  public static MonthFragment newInstance(Date showingDate) {
+  public static MonthFragment newInstance() {
     MonthFragment fragment = new MonthFragment();
     Bundle args = new Bundle();
-    args.putSerializable(ARG_DATE, showingDate);
-    fragment.setArguments(args);
     return fragment;
   }
 
@@ -54,9 +48,6 @@ public class MonthFragment extends Fragment {
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    if (getArguments() != null) {
-      showingDate = (Date) getArguments().getSerializable(ARG_DATE);
-    }
   }
 
   @Override
@@ -65,7 +56,7 @@ public class MonthFragment extends Fragment {
 
     // `showingDate` を取得（例: フラグメントの引数などで設定されていると仮定）
     Calendar calendar = Calendar.getInstance();
-    calendar.setTime(showingDate);
+    calendar.setTime(mainActivity.showingDate);
 
     // 月の初日を設定
     calendar.set(Calendar.DAY_OF_MONTH, 1);
@@ -96,7 +87,7 @@ public class MonthFragment extends Fragment {
 
     // 現在の日付を取得
     Calendar today = Calendar.getInstance();
-    today.setTime(presentDate);
+    today.setTime(mainActivity.presentDate);
 
     Date[] monthDates = new Date[35];
     // 日付の設定
@@ -179,15 +170,6 @@ public class MonthFragment extends Fragment {
     //    ここからTextViewにDayFragmentに移動するためのクリックイベントを設定
     gestureDetector = new GestureDetector(getContext(), mainActivity.new GestureListener());
     LinearLayout monthLayout = view.findViewById(R.id.monthLayout);
-//    // 各 taskView を取得
-//    View[] taskViews = new View[35];
-//    for (int i = 0; i < 35; i++) {
-//      String idName = "dayTaskView" + (i + 1);
-//      int resId = getResources().getIdentifier(idName, "id", getActivity().getPackageName());
-//      if (resId != 0) {
-//        taskViews[i] = view.findViewById(resId);
-//      }
-//    }
 
     monthLayout.setOnTouchListener((v, event) -> {
       boolean isGestureDetected = gestureDetector.onTouchEvent(event);

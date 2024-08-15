@@ -170,16 +170,16 @@ public class MainActivity extends AppCompatActivity {
 
     switch (tabPosition) {
       case 0:
-        fragment = MonthFragment.newInstance(showingDate);
+        fragment = MonthFragment.newInstance();
         break;
       case 1:
-        fragment = WeekFragment.newInstance(showingDate);
+        fragment = WeekFragment.newInstance();
         break;
       case 2:
-        fragment = DayFragment.newInstance(showingDate);
+        fragment = DayFragment.newInstance();
         break;
       default:
-        fragment = DayFragment.newInstance(showingDate); // デフォルトのフラグメント
+        fragment = DayFragment.newInstance(); // デフォルトのフラグメント
         break;
     }
 
