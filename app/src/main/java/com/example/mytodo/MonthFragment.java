@@ -1,10 +1,16 @@
 package com.example.mytodo;
 
+import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Rect;
 import android.os.Bundle;
+import android.os.Handler;
+import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -12,9 +18,17 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class MonthFragment extends Fragment {
+  private MainActivity mainActivity;
+
   private static final String ARG_DATE = "showingDate";
   private Date showingDate;
   private Date presentDate = MainActivity.presentDate;
+
+  private GestureDetector gestureDetector;
+
+  // ボタンのクリック処理が連続して発火しないようにするためのフラグ
+  private boolean isButtonClicked = false;
+  private static final long DEBOUNCE_DELAY_MS = 300; // デバウンス遅延時間（ミリ秒）
 
   public MonthFragment() {
   }
@@ -25,6 +39,18 @@ public class MonthFragment extends Fragment {
     fragment.setArguments(args);
     return fragment;
   }
+
+  @Override
+  public void onAttach(Context context) {
+    super.onAttach(context);
+    if (context instanceof MainActivity) {
+      mainActivity = (MainActivity) context; // contextをMainActivityにキャスト
+    } else {
+      throw new RuntimeException(context.toString()
+          + " must be an instance of MainActivity");
+    }
+  }
+
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -148,6 +174,65 @@ public class MonthFragment extends Fragment {
         // 設定された日付を monthDates に保存
         monthDates[i] = calendarForDate.getTime();
       }
+    }
+
+    //    ここからTextViewにDayFragmentに移動するためのクリックイベントを設定
+    gestureDetector = new GestureDetector(getContext(), mainActivity.new GestureListener());
+    LinearLayout monthLayout = view.findViewById(R.id.monthLayout);
+//    // 各 taskView を取得
+//    View[] taskViews = new View[35];
+//    for (int i = 0; i < 35; i++) {
+//      String idName = "dayTaskView" + (i + 1);
+//      int resId = getResources().getIdentifier(idName, "id", getActivity().getPackageName());
+//      if (resId != 0) {
+//        taskViews[i] = view.findViewById(resId);
+//      }
+//    }
+
+    monthLayout.setOnTouchListener((v, event) -> {
+      boolean isGestureDetected = gestureDetector.onTouchEvent(event);
+
+      // タッチイベントの座標を取得
+      float x = event.getX();
+      float y = event.getY();
+
+      // ボタンの位置とサイズを取得
+      Rect buttonRect = new Rect();
+
+      for (View targetedView : dayTexts) {
+        targetedView.getHitRect(buttonRect);
+        // タッチがボタンの領域内にあるかどうかをチェック
+        if (buttonRect.contains((int) x, (int) y)) {
+          // ボタンがタッチされた場合
+          if (!isButtonClicked) {
+            isButtonClicked = true;
+            targetedView.performClick();
+
+            // デバウンス処理のために、一定時間後にフラグをリセット
+            new Handler().postDelayed(() -> isButtonClicked = false, DEBOUNCE_DELAY_MS);
+
+            // イベントを消費して、スクロールを無効にする
+            return true;
+          }
+        }
+      }
+
+      // 横スワイプ
+      return true;
+    });
+
+    for (int i = 0; i < dayTexts.length; i++) {
+      final Date newShowingDate = monthDates[i];
+      dayTexts[i].setOnClickListener(v -> {
+//        showingDateに1日加算
+        Calendar calendarForShowingDate = Calendar.getInstance();
+        calendarForShowingDate.setTime(newShowingDate);
+        mainActivity.showingDate = calendarForShowingDate.getTime();
+//        DayFragment作成
+        mainActivity.dateTypeTabLayout.getTabAt(2).select(); // タブの3番目（インデックス2）を選択
+        mainActivity.updateTextViewBasedOnDate(mainActivity.showingDate);
+        mainActivity.displayFragmentForTab(mainActivity.dateTypeTabLayout.getSelectedTabPosition());
+      });
     }
 
     return view;
