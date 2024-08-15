@@ -2,9 +2,11 @@ package com.example.mytodo;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 
 import android.util.Log;
+import android.widget.Button;
 import android.widget.EditText;
 import androidx.appcompat.app.AppCompatActivity;
 import java.text.SimpleDateFormat;
@@ -25,6 +27,14 @@ public class AddToDoActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_add_to_do);
+
+    Button exitButton = findViewById(R.id.exitButton);
+    Button storeButton = findViewById(R.id.storeButton);
+
+    exitButton.setOnClickListener(v -> {
+      Intent intent = new Intent(AddToDoActivity.this, MainActivity.class);
+      startActivity(intent);
+    });
 
     editStartDate = findViewById(R.id.editStartDate);
     editEndDate = findViewById(R.id.editEndDate);

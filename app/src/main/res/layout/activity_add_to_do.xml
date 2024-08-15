@@ -9,6 +9,7 @@
     android:layout_height="match_parent"
     android:layout_marginTop="16dp"
     android:layout_marginBottom="16dp"
+    android:gravity="top"
     android:orientation="vertical">
     <LinearLayout
       android:id="@+id/operationButtonContainer"
@@ -22,7 +23,7 @@
         android:layout_gravity="start"
         android:text="@string/exitButton"
         android:textColor="@color/black"
-        android:textSize="20sp"
+        android:textSize="32sp"
         app:backgroundTint="@null" />
       <Space
         android:layout_width="wrap_content"
@@ -52,7 +53,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="text"
-        android:textSize="24sp" />
+        android:textSize="30sp" />
     </com.google.android.material.textfield.TextInputLayout>
     <LinearLayout
       android:layout_width="match_parent"
@@ -63,31 +64,37 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <RadioButton
-          android:id="@+id/radioButton"
+          android:id="@+id/planRadioButton"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           android:layout_weight="1"
           android:layout_marginStart="64dp"
           android:checked="true"
-          android:text="@string/planRadioButton" />
+          android:text="@string/planRadioButton"
+          android:textSize="20sp" />
         <RadioButton
-          android:id="@+id/radioButton3"
+          android:id="@+id/TaskRadioButton"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           android:layout_weight="1"
           android:layout_marginEnd="64dp"
           android:checked="false"
-          android:text="@string/taskRadioButton" />
+          android:text="@string/taskRadioButton"
+          android:textSize="20sp" />
       </RadioGroup>
     </LinearLayout>
-    <View style="@style/horizontalBorder" />
+    <View
+      style="@style/horizontalBorder"
+      android:layout_marginTop="8dp"
+      android:layout_marginBottom="8dp" />
     <Switch
       android:id="@+id/allDaySwitch"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginStart="48dp"
       android:padding="16dp"
-      android:text="@string/allDay" />
+      android:text="@string/allDay"
+      android:textSize="20sp" />
     <LinearLayout
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
@@ -105,11 +112,12 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:clickable="true"
+          android:enabled="true"
           android:focusable="false"
           android:focusableInTouchMode="false"
-          android:enabled="true"
           android:inputType="none"
-          android:text="@string/daySample" />
+          android:text="@string/daySample"
+          android:textSize="20sp" />
       </com.google.android.material.textfield.TextInputLayout>
       <Space
         android:layout_width="wrap_content"
@@ -126,11 +134,12 @@
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:clickable="true"
+          android:enabled="true"
           android:focusable="false"
           android:focusableInTouchMode="false"
-          android:enabled="true"
           android:inputType="none"
-          android:text="@string/daySample" />
+          android:text="@string/daySample"
+          android:textSize="20sp" />
       </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
     <LinearLayout
@@ -150,11 +159,12 @@
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
           android:clickable="true"
+          android:enabled="true"
           android:focusable="false"
           android:focusableInTouchMode="false"
-          android:enabled="true"
           android:inputType="none"
-          android:text="@string/daySample" />
+          android:text="@string/daySample"
+          android:textSize="20sp" />
       </com.google.android.material.textfield.TextInputLayout>
       <Space
         android:layout_width="wrap_content"
@@ -171,11 +181,63 @@
           android:layout_width="match_parent"
           android:layout_height="wrap_content"
           android:clickable="true"
+          android:enabled="true"
           android:focusable="false"
           android:focusableInTouchMode="false"
-          android:enabled="true"
           android:inputType="none"
-          android:text="@string/daySample" />
+          android:text="@string/daySample"
+          android:textSize="20sp" />
+      </com.google.android.material.textfield.TextInputLayout>
+    </LinearLayout>
+    <View
+      style="@style/horizontalBorder"
+      android:layout_marginTop="8dp"
+      android:layout_marginBottom="8dp" />
+    <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:gravity="center_vertical"
+      android:orientation="horizontal">
+      <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+        <View
+          style="@style/lineForDetails"
+          android:layout_marginTop="2dp"
+          android:layout_marginBottom="2dp"
+          android:layout_marginStart="20dp"
+          android:layout_marginEnd="8dp"></View>
+        <View
+          style="@style/lineForDetails"
+          android:layout_marginTop="2dp"
+          android:layout_marginBottom="2dp"
+          android:layout_marginStart="20dp"
+          android:layout_marginEnd="8dp"></View>
+        <View
+          style="@style/lineForDetails"
+          android:layout_marginTop="2dp"
+          android:layout_marginBottom="2dp"
+          android:layout_marginStart="20dp"
+          android:layout_marginEnd="16dp"></View>
+
+      </LinearLayout>
+      <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="7"
+        android:hint="details">
+
+        <com.google.android.material.textfield.TextInputEditText
+          style="@style/CustomInputTextLayoutStyle"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:inputType="textMultiLine"
+          android:lines="1"
+          android:maxLines="5"
+          android:scrollbars="vertical"
+          android:textSize="16sp" />
       </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
   </LinearLayout>
