@@ -23,6 +23,12 @@
     <item name="android:background">@color/lightGrey</item>
   </style>
 
+  <style name="lineForDetails">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">4dp</item>
+    <item name="android:background">@color/grey</item>
+  </style>
+
   <style name="addButtonStyle">
     <item name="android:background">@drawable/add_button</item> <!-- カスタム背景を指定 -->
     <item name="android:layout_width">wrap_content</item> <!-- 横幅を自動調整 -->
