@@ -73,7 +73,7 @@
           android:text="@string/planRadioButton"
           android:textSize="20sp" />
         <RadioButton
-          android:id="@+id/TaskRadioButton"
+          android:id="@+id/taskRadioButton"
           android:layout_width="0dp"
           android:layout_height="wrap_content"
           android:layout_weight="1"
@@ -96,6 +96,7 @@
       android:text="@string/allDay"
       android:textSize="20sp" />
     <LinearLayout
+      android:id="@+id/startTimeContainer"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginStart="48dp"
@@ -124,6 +125,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1" />
       <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/startTimeLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end">
@@ -143,6 +145,7 @@
       </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
     <LinearLayout
+      android:id="@+id/endTimeContainer"
       android:layout_width="match_parent"
       android:layout_height="wrap_content"
       android:layout_marginStart="48dp"
@@ -171,6 +174,7 @@
         android:layout_height="wrap_content"
         android:layout_weight="1" />
       <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/endTimeLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end">
