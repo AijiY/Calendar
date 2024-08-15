@@ -1,5 +1,6 @@
 package com.example.mytodo;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -299,6 +300,13 @@ public class MainActivity extends AppCompatActivity {
     int endDay = Integer.parseInt(dateFormat.format(endDate));
 
     return getOrdinalDate(startDay) + "-" + getOrdinalDate(endDay);
+  }
+
+// 他のActivityがなければ、戻るボタンでアプリを終了
+  @SuppressLint("MissingSuperCall")
+  @Override
+  public void onBackPressed() {
+    finish(); // アプリを終了させる
   }
 }
 

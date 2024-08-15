@@ -134,4 +134,11 @@
     <item name="android:layout_weight">1</item>
   </style>
 
+  <!--AddToDoActivity-->
+  <style name="CustomPickerDialog" parent="Theme.AppCompat.Dialog.Alert">
+    <!-- ダイアログのサイズ -->
+    <item name="android:windowMinWidthMajor">20%</item>
+    <item name="android:windowMinWidthMinor">20%</item>
+  </style>
 </resources>
+

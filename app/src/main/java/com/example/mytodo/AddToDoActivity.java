@@ -1,17 +1,25 @@
 package com.example.mytodo;
 
+import static com.example.mytodo.MainActivity.showingDate;
+
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.Switch;
 import androidx.appcompat.app.AppCompatActivity;
+import com.google.android.material.textfield.TextInputLayout;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
 
 public class AddToDoActivity extends AppCompatActivity {
@@ -30,10 +38,42 @@ public class AddToDoActivity extends AppCompatActivity {
 
     Button exitButton = findViewById(R.id.exitButton);
     Button storeButton = findViewById(R.id.storeButton);
+    RadioButton planRadioButton = findViewById(R.id.planRadioButton);
+    RadioButton taskRadioButton = findViewById(R.id.taskRadioButton);
+    Switch allDaySwitch = findViewById(R.id.allDaySwitch);
+    LinearLayout startTimeContainer = findViewById(R.id.startTimeContainer);
+    LinearLayout endTimeContainer = findViewById(R.id.endTimeContainer);
+    TextInputLayout startTimeLayout = findViewById(R.id.startTimeLayout);
+    TextInputLayout endTimeLayout = findViewById(R.id.endTimeLayout);
 
     exitButton.setOnClickListener(v -> {
       Intent intent = new Intent(AddToDoActivity.this, MainActivity.class);
+      intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
       startActivity(intent);
+      finish(); // AddToDoActivity を終了
+    });
+
+    storeButton.setOnClickListener(v -> {
+      // タスクの保存処理
+      Log.d("AddToDoActivity", "storeButton clicked");
+    });
+
+    taskRadioButton.setOnCheckedChangeListener((buttonView, isChecked) -> {
+      if (isChecked) {
+        endTimeContainer.setVisibility(View.GONE);
+      } else {
+        endTimeContainer.setVisibility(View.VISIBLE);
+      }
+    });
+
+    allDaySwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+      if (isChecked) {
+        startTimeLayout.setVisibility(View.GONE);
+        endTimeLayout.setVisibility(View.GONE);
+      } else {
+        startTimeLayout.setVisibility(View.VISIBLE);
+        endTimeLayout.setVisibility(View.VISIBLE);
+      }
     });
 
     editStartDate = findViewById(R.id.editStartDate);
@@ -42,7 +82,6 @@ public class AddToDoActivity extends AppCompatActivity {
     editEndTime = findViewById(R.id.editEndTime);
 
 //    初期値設定
-    Date showingDate = MainActivity.showingDate;
     calendarStart = Calendar.getInstance();
     calendarStart.setTime(showingDate);
     calendarEnd = Calendar.getInstance();
@@ -64,25 +103,112 @@ public class AddToDoActivity extends AppCompatActivity {
 
 
 //    時間編集イベント
-    editStartDate.setOnClickListener(v -> showDatePicker(calendarStart, editStartDate));
-    editEndDate.setOnClickListener(v -> showDatePicker(calendarEnd, editEndDate));
-    editStartTime.setOnClickListener(v -> showTimePicker(calendarStart, editStartTime));
-    editEndTime.setOnClickListener(v -> showTimePicker(calendarEnd, editEndTime));
+    editStartDate.setOnClickListener(v -> showStartDatePicker(calendarStart, editStartDate, calendarEnd, editEndDate));
+    editEndDate.setOnClickListener(v -> showEndDatePicker(calendarEnd, editEndDate, calendarStart));
+    editStartTime.setOnClickListener(v -> showStartTimePicker(calendarStart, editStartTime, calendarEnd, editEndTime, editEndDate));
+    editEndTime.setOnClickListener(v -> showEndTimePicker(calendarEnd, editEndTime, calendarStart));
   }
 
-  private void showDatePicker(Calendar calendar, EditText editText) {
+  private void showEndDatePicker(Calendar calendarEnd, EditText editEndDate, Calendar calendarStart) {
     new DatePickerDialog(AddToDoActivity.this, (view, year, month, dayOfMonth) -> {
-      calendar.set(year, month, dayOfMonth);
-      updateDateLabel(editText, calendar);
-    }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH)).show();
+      // 変更前の日付を記録
+      Calendar previousEndDate = Calendar.getInstance();
+      previousEndDate.setTime(calendarEnd.getTime());
+      // 新しい日付を設定
+      calendarEnd.set(year, month, dayOfMonth);
+
+      // 逆転チェック
+      if (calendarEnd.before(calendarStart)) {
+        // 逆転している場合、ユーザーに警告を表示
+        new AlertDialog.Builder(AddToDoActivity.this)
+            .setTitle("Warning")
+            .setMessage("End time must be after start time.")
+            .setPositiveButton("OK", (dialog, which) -> {
+              // OKボタンが押されたら、もう一度日付を選択できるようにする
+              dialog.dismiss();
+            })
+            .show();
+        // calendarEndを変更前の日付に戻す
+        calendarEnd.setTime(previousEndDate.getTime());
+      } else {
+        // 逆転していない場合は日付を更新
+        updateDateLabel(editEndDate, calendarEnd);
+      }
+    }, calendarEnd.get(Calendar.YEAR), calendarEnd.get(Calendar.MONTH), calendarEnd.get(Calendar.DAY_OF_MONTH)).show();
   }
 
-  private void showTimePicker(Calendar calendar, EditText editText) {
+  private void showEndTimePicker(Calendar calendarEnd, EditText editEndTime, Calendar calendarStart) {
     new TimePickerDialog(AddToDoActivity.this, (view, hourOfDay, minute) -> {
-      calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
-      calendar.set(Calendar.MINUTE, minute);
-      updateTimeLabel(editText, calendar);
-    }, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true).show();
+      // 変更前の時間を記録
+      Calendar previousEndTime = Calendar.getInstance();
+      previousEndTime.setTime(calendarEnd.getTime());
+
+      // 新しい時間を設定
+      calendarEnd.set(Calendar.HOUR_OF_DAY, hourOfDay);
+      calendarEnd.set(Calendar.MINUTE, minute);
+
+      // 逆転チェック
+      if (calendarEnd.before(calendarStart)) {
+        // 逆転している場合、ユーザーに警告を表示
+        new AlertDialog.Builder(AddToDoActivity.this)
+            .setTitle("Warning")
+            .setMessage("End time must be after start time.")
+            .setPositiveButton("OK", (dialog, which) -> {
+              // OKボタンが押されたら、もう一度時間を選択できるようにする
+              dialog.dismiss();
+            })
+            .show();
+        // calendarEndを変更前の時間に戻す
+        calendarEnd.setTime(previousEndTime.getTime());
+      } else {
+        // 逆転していない場合は時間を更新
+        updateTimeLabel(editEndTime, calendarEnd);
+      }
+    }, calendarEnd.get(Calendar.HOUR_OF_DAY), calendarEnd.get(Calendar.MINUTE), true).show();
+  }
+
+  private void showStartDatePicker(Calendar calendarStart, EditText editStartDate, Calendar calendarEnd, EditText editEndDate) {
+    // 変更前の日付を記録
+    Calendar previousStartDate = Calendar.getInstance();
+    previousStartDate.setTime(calendarStart.getTime());
+
+    new DatePickerDialog(AddToDoActivity.this, (view, year, month, dayOfMonth) -> {
+      // 変更後の日付を設定
+      calendarStart.set(year, month, dayOfMonth);
+      updateDateLabel(editStartDate, calendarStart);
+
+      // 変更後の日付と変更前の日付の差分を計算
+      long diffInMillis = calendarStart.getTimeInMillis() - previousStartDate.getTimeInMillis();
+      int daysDifference = (int) (diffInMillis / (1000 * 60 * 60 * 24)); // ミリ秒を日数に変換
+
+      // endDateを同じ分だけ調整
+      calendarEnd.add(Calendar.DAY_OF_MONTH, daysDifference);
+      updateDateLabel(editEndDate, calendarEnd);
+
+    }, calendarStart.get(Calendar.YEAR), calendarStart.get(Calendar.MONTH), calendarStart.get(Calendar.DAY_OF_MONTH)).show();
+  }
+
+  private void showStartTimePicker(Calendar calendarStart, EditText editStartTime, Calendar calendarEnd, EditText editEndTime, EditText editEndDate) {
+    // 変更前の時間を記録
+    Calendar previousStartTime = Calendar.getInstance();
+    previousStartTime.setTime(calendarStart.getTime());
+
+    new TimePickerDialog(AddToDoActivity.this, (view, hourOfDay, minute) -> {
+      // 変更後の時間を設定
+      calendarStart.set(Calendar.HOUR_OF_DAY, hourOfDay);
+      calendarStart.set(Calendar.MINUTE, minute);
+      updateTimeLabel(editStartTime, calendarStart);
+
+      // 変更後の時間と変更前の時間の差分を計算
+      long diffInMillis = calendarStart.getTimeInMillis() - previousStartTime.getTimeInMillis();
+      int minutesDifference = (int) (diffInMillis / (1000 * 60)); // ミリ秒を分数に変換
+
+      // endTimeを同じ分だけ調整
+      calendarEnd.add(Calendar.MINUTE, minutesDifference);
+      updateTimeLabel(editEndTime, calendarEnd);
+      updateDateLabel(editEndDate, calendarEnd);
+
+    }, calendarStart.get(Calendar.HOUR_OF_DAY), calendarStart.get(Calendar.MINUTE), true).show();
   }
 
   private void updateDateLabel(EditText editText, Calendar calendar) {
@@ -93,5 +219,15 @@ public class AddToDoActivity extends AppCompatActivity {
   private void updateTimeLabel(EditText editText, Calendar calendar) {
     SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
     editText.setText(sdf.format(calendar.getTime()));
+  }
+
+  // 戻るボタンでActivity終了
+  @SuppressLint("MissingSuperCall")
+  @Override
+  public void onBackPressed() {
+    Intent intent = new Intent(AddToDoActivity.this, MainActivity.class);
+    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+    startActivity(intent);
+    finish(); // AddToDoActivity を終了
   }
 }
