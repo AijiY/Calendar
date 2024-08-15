@@ -20,9 +20,6 @@ import java.util.Date;
 public class DayFragment extends Fragment {
   private MainActivity mainActivity;
 
-  private static final String ARG_DATE = "showingDate";
-  private Date showingDate;
-
   private GestureDetector gestureDetector;
 
   // ボタンのクリック処理が連続して発火しないようにするためのフラグ
@@ -32,11 +29,9 @@ public class DayFragment extends Fragment {
   public DayFragment() {
   }
 
-  public static DayFragment newInstance(Date showingDate) {
+  public static DayFragment newInstance() {
     DayFragment fragment = new DayFragment();
     Bundle args = new Bundle();
-    args.putSerializable(ARG_DATE, showingDate);
-    fragment.setArguments(args);
     return fragment;
   }
 
@@ -54,9 +49,6 @@ public class DayFragment extends Fragment {
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    if (getArguments() != null) {
-      showingDate = (Date) getArguments().getSerializable(ARG_DATE);
-    }
   }
 
   @Override
