@@ -4,17 +4,19 @@ import java.util.Calendar;
 
 public class Plan {
   private String title;
-  private String description;
+  private String details;
   private Calendar CalendarStart;
   private Calendar CalendarEnd;
   private boolean isAllDay;
+  private String category;
 
-  public Plan(String title, String description, Calendar CalendarStart, Calendar CalendarEnd, boolean isAllDay) {
+  public Plan(String title, String details, Calendar CalendarStart, Calendar CalendarEnd, boolean isAllDay, String category) {
     this.title = title;
-    this.description = description;
+    this.details = details;
     this.CalendarStart = CalendarStart;
     this.CalendarEnd = CalendarEnd;
     this.isAllDay = isAllDay;
+    this.category = category;
   }
 
   public String getTitle() {
@@ -25,12 +27,12 @@ public class Plan {
     this.title = title;
   }
 
-  public String getDescription() {
-    return description;
+  public String getDetails() {
+    return details;
   }
 
-  public void setDescription(String description) {
-    this.description = description;
+  public void setDetails(String details) {
+    this.details = details;
   }
 
   public Calendar getCalendarStart() {
@@ -55,5 +57,13 @@ public class Plan {
 
   public void setAllDay(boolean allDay) {
     isAllDay = allDay;
+  }
+
+  public String getCategory() {
+    return category;
+  }
+
+  public void setCategory(String category) {
+    this.category = category;
   }
 }

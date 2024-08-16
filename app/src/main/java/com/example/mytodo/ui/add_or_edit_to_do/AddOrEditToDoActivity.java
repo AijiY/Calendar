@@ -6,16 +6,23 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.Spinner;
 import android.widget.Switch;
+import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.mytodo.R;
 import com.example.mytodo.data.model.Plan;
@@ -36,6 +43,8 @@ public class AddOrEditToDoActivity extends AppCompatActivity {
   private Calendar calendarStart;
   private Calendar calendarEnd;
 
+  private int currentCategorySelection = 0;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -52,15 +61,39 @@ public class AddOrEditToDoActivity extends AppCompatActivity {
     TextInputLayout endTimeLayout = findViewById(R.id.endTimeLayout);
     TextInputEditText titleInput = findViewById(R.id.titleInput);
     TextInputEditText detailsInput = findViewById(R.id.detailsInput);
+    Spinner categorySpinner = findViewById(R.id.categorySpinner);
 
+    // カテゴリーのスピナーをカスタムレイアウトで表示
+    ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+        R.layout.spinner_item, // アイテム表示用のカスタムレイアウト
+        MainActivity.categories);
+
+    adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+
+    Spinner spinner = findViewById(R.id.categorySpinner);
+    spinner.setAdapter(adapter);
+
+    spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+      @Override
+      public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        if (position == 1) { // 「Add New」なら
+          showAddNewItemDialog(currentCategorySelection); // ダイアログを表示
+        }
+      }
+
+      @Override
+      public void onNothingSelected(AdapterView<?> parent) {
+        // 特に何もしない
+      }
+    });
+
+//    exitButton が押されたら MainActivity に戻る
     exitButton.setOnClickListener(v -> {
       Intent intent = new Intent(AddOrEditToDoActivity.this, MainActivity.class);
       intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
       startActivity(intent);
       finish(); // AddOrEditToDoActivity を終了
     });
-
-
 
     taskRadioButton.setOnCheckedChangeListener((buttonView, isChecked) -> {
       if (isChecked) {
@@ -151,7 +184,7 @@ public class AddOrEditToDoActivity extends AppCompatActivity {
         // デバッグ用に出力
         Log.d("DEBUG", "Adjusted Start Date: " + calendarStart.getTime());
         Log.d("DEBUG", "Adjusted End Date: " + calendarEnd.getTime());
-        MainActivity.plans.add(new Plan(title, details, calendarStart, calendarEnd, allDaySwitch.isChecked()));
+        MainActivity.plans.add(new Plan(title, details, calendarStart, calendarEnd, allDaySwitch.isChecked(), categorySpinner.getSelectedItem().toString()));
       } else {
         MainActivity.tasks.add(new Task(title, details, calendarStart));
       }
@@ -273,6 +306,70 @@ public class AddOrEditToDoActivity extends AppCompatActivity {
   private void updateTimeLabel(EditText editText, Calendar calendar) {
     SimpleDateFormat sdf = new SimpleDateFormat("HH:mm", Locale.getDefault());
     editText.setText(sdf.format(calendar.getTime()));
+  }
+
+  private void showAddNewItemDialog(int currentSelection) {
+    // Spinnerとその選択状態を取得
+    Spinner categorySpinner = findViewById(R.id.categorySpinner);
+
+    // ダイアログのレイアウトをインフレート
+    LayoutInflater inflater = LayoutInflater.from(this);
+    View dialogView = inflater.inflate(R.layout.dialog_add_new_category, null);
+
+    // ダイアログビルダーを作成
+    AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    builder.setTitle("Add New Category")
+        .setView(dialogView)
+        .setPositiveButton("Add", null) // 初期設定でボタンの動作を無効にする
+        .setNegativeButton("Cancel", (dialog, which) -> {
+          // ダイアログをキャンセルしたときにSpinnerの選択を元に戻す
+          categorySpinner.setSelection(currentSelection);
+          dialog.dismiss();
+        });
+
+    // ダイアログを作成
+    AlertDialog dialog = builder.create();
+
+    // ダイアログ表示後の処理
+    dialog.setOnShowListener(d -> {
+      // EditTextを取得
+      EditText newItemInput = dialogView.findViewById(R.id.new_item_input);
+
+      // EditTextにフォーカスを設定
+      newItemInput.requestFocus();
+
+      // ソフトウェアキーボードを表示するための処理
+      InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+      imm.showSoftInput(newItemInput, InputMethodManager.SHOW_IMPLICIT);
+
+      // PositiveButtonの動作をカスタマイズ
+      Button addButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+      addButton.setOnClickListener(v -> {
+        // 新しい項目を取得してSpinnerに追加する
+        String newItem = newItemInput.getText().toString().trim(); // 空白をトリム
+
+        // Spinnerに新しいアイテムを追加
+        ArrayAdapter<String> adapter = (ArrayAdapter<String>) categorySpinner.getAdapter();
+
+        // 重複チェック
+        if (newItem.isEmpty() || MainActivity.categories.contains(newItem)) {
+          // トーストメッセージで警告
+          Toast.makeText(this, "Category already exists or is empty", Toast.LENGTH_SHORT).show();
+        } else {
+          // 新しいカテゴリを追加
+          MainActivity.categories.add(newItem);
+          adapter.notifyDataSetChanged();
+
+          // 新しいアイテムを選択する
+          currentCategorySelection = adapter.getPosition(newItem);
+          categorySpinner.setSelection(currentCategorySelection);
+          dialog.dismiss(); // 正常な場合のみダイアログを閉じる
+        }
+      });
+    });
+
+    // ダイアログを表示
+    dialog.show();
   }
 
   // 戻るボタンでActivity終了

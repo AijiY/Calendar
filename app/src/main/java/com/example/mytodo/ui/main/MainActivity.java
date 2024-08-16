@@ -24,6 +24,7 @@ import com.example.mytodo.utils.TouchUtils;
 import com.google.android.material.tabs.TabLayout;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -35,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
 
   public static List<Plan> plans = new ArrayList<>();
   public static List<Task> tasks = new ArrayList<>();
+  public static List<String> categories = new ArrayList<>(
+      Arrays.asList("none", "Add New"));
 
   public static TabLayout dateTypeTabLayout;
   private GestureDetector gestureDetector;
