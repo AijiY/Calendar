@@ -18,6 +18,7 @@ import com.example.mytodo.ui.add_or_edit_to_do.AddOrEditToDoActivity;
 import com.example.mytodo.R;
 import com.example.mytodo.data.model.Plan;
 import com.example.mytodo.data.model.Task;
+import com.example.mytodo.utils.DateUtils;
 import com.google.android.material.tabs.TabLayout;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -66,21 +67,9 @@ public class MainActivity extends AppCompatActivity {
         // タブが選択されたときに、タブの位置に応じて画面を表示
         int tabPosition = tab.getPosition();
 
-        // タブのテキストを更新
-        updateTextViewBasedOnDate(showingDate);
-
         // タブの位置に応じて適切なフラグメントを作成
         displayFragmentForTab(tabPosition);
 
-////        タブがDayタブ以外の場合、スワイプジェスチャーを有効にする（DayのスワイプはDayFragmentで設定）
-//        if (tabPosition != 2) { // Dayタブ以外が選択された場合
-//          toDoDisplay.setOnTouchListener((v, event) -> {
-//            gestureDetector.onTouchEvent(event);
-//            return true;
-//          });
-//        } else {
-//          toDoDisplay.setOnTouchListener(null);
-//        }
       }
       @Override
       public void onTabUnselected(@NonNull TabLayout.Tab tab) {
@@ -162,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
     endOfWeek.add(Calendar.DAY_OF_WEEK, 6); // 週の終わり
     Date endOfWeekDate = endOfWeek.getTime();
 
-    String weekRange = getWeekDayRange(startOfWeekDate, endOfWeekDate);
+    String weekRange = DateUtils.getWeekDayRange(startOfWeekDate, endOfWeekDate);
 
     if (dateTypeTabLayout.getTabAt(1) != null) {
       dateTypeTabLayout.getTabAt(1).setText(weekRange.toString());
@@ -170,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
 
     // 3つ目のタブ: その日
     int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-    String ordinalDate = getOrdinalDate(dayOfMonth);
+    String ordinalDate = DateUtils.getOrdinalDate(dayOfMonth);
     if (dateTypeTabLayout.getTabAt(2) != null) {
       dateTypeTabLayout.getTabAt(2).setText(ordinalDate);
     }
@@ -245,13 +234,13 @@ public class MainActivity extends AppCompatActivity {
     // 現在のタブに応じて日付を更新
     switch (currentTab) {
       case 0: // 月タブ
-        showingDate = addMonths(showingDate, direction);
+        showingDate = DateUtils.addMonths(showingDate, direction);
         break;
       case 1: // 週タブ
-        showingDate = addWeeks(showingDate, direction);
+        showingDate = DateUtils.addWeeks(showingDate, direction);
         break;
       case 2: // 日タブ
-        showingDate = addDays(showingDate, direction);
+        showingDate = DateUtils.addDays(showingDate, direction);
         break;
     }
     Log.d("ShowingDate",showingDate.toString());
@@ -264,55 +253,7 @@ public class MainActivity extends AppCompatActivity {
     displayFragmentForTab(currentTab);
   }
 
-  public Date addMonths(Date date, int amount) {
-    Calendar calendar = Calendar.getInstance();
-    calendar.setTime(date);
-    calendar.add(Calendar.MONTH, amount);
-    calendar.set(Calendar.DAY_OF_MONTH, 1); // 月の最初の日に設定
-    return calendar.getTime();
-  }
 
-  public Date addWeeks(Date date, int amount) {
-    Calendar calendar = Calendar.getInstance();
-    calendar.setTime(date);
-    calendar.add(Calendar.WEEK_OF_YEAR, amount);
-    calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY); // 週の最初の日に設定
-    return calendar.getTime();
-  }
-
-  public Date addDays(Date date, int amount) {
-    Calendar calendar = Calendar.getInstance();
-    calendar.setTime(date);
-    calendar.add(Calendar.DAY_OF_MONTH, amount);
-    return calendar.getTime();
-  }
-
-  public String getOrdinalDate(int dayOfMonth) {
-    String[] suffixes = {"th", "st", "nd", "rd"};
-    int j = dayOfMonth % 10;
-    int k = dayOfMonth % 100;
-    String suffix;
-
-    if (j == 1 && k != 11) {
-      suffix = suffixes[1];
-    } else if (j == 2 && k != 12) {
-      suffix = suffixes[2];
-    } else if (j == 3 && k != 13) {
-      suffix = suffixes[3];
-    } else {
-      suffix = suffixes[0];
-    }
-
-    return dayOfMonth + suffix;
-  }
-
-  public String getWeekDayRange(Date startDate, Date endDate) {
-    SimpleDateFormat dateFormat = new SimpleDateFormat("d", Locale.getDefault());
-    int startDay = Integer.parseInt(dateFormat.format(startDate));
-    int endDay = Integer.parseInt(dateFormat.format(endDate));
-
-    return getOrdinalDate(startDay) + "-" + getOrdinalDate(endDay);
-  }
 
 // 他のActivityがなければ、戻るボタンでアプリを終了
   @SuppressLint("MissingSuperCall")
