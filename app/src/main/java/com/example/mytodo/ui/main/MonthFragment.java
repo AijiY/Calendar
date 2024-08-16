@@ -14,6 +14,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.example.mytodo.R;
+import com.example.mytodo.utils.TouchUtils;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -21,10 +22,6 @@ public class MonthFragment extends Fragment {
   private MainActivity mainActivity;
 
   private GestureDetector gestureDetector;
-
-  // ボタンのクリック処理が連続して発火しないようにするためのフラグ
-  private boolean isButtonClicked = false;
-  private static final long DEBOUNCE_DELAY_MS = 300; // デバウンス遅延時間（ミリ秒）
 
   public MonthFragment() {
   }
@@ -167,42 +164,14 @@ public class MonthFragment extends Fragment {
       }
     }
 
-    //    ここからTextViewにDayFragmentに移動するためのクリックイベントを設定
+    //    スワイプを検出するための GestureDetector を作成
     gestureDetector = new GestureDetector(getContext(), mainActivity.new GestureListener());
+
+    //    monthLayoutにスワイプよりもタッチを優先する設定
     LinearLayout monthLayout = view.findViewById(R.id.monthLayout);
+    TouchUtils.setPriorityOnClickListener(monthLayout, dayTexts, gestureDetector, 0, getContext());
 
-    monthLayout.setOnTouchListener((v, event) -> {
-      boolean isGestureDetected = gestureDetector.onTouchEvent(event);
-
-      // タッチイベントの座標を取得
-      float x = event.getX();
-      float y = event.getY();
-
-      // ボタンの位置とサイズを取得
-      Rect buttonRect = new Rect();
-
-      for (View targetedView : dayTexts) {
-        targetedView.getHitRect(buttonRect);
-        // タッチがボタンの領域内にあるかどうかをチェック
-        if (buttonRect.contains((int) x, (int) y)) {
-          // ボタンがタッチされた場合
-          if (!isButtonClicked) {
-            isButtonClicked = true;
-            targetedView.performClick();
-
-            // デバウンス処理のために、一定時間後にフラグをリセット
-            new Handler().postDelayed(() -> isButtonClicked = false, DEBOUNCE_DELAY_MS);
-
-            // イベントを消費して、スクロールを無効にする
-            return true;
-          }
-        }
-      }
-
-      // 横スワイプ
-      return true;
-    });
-
+//    日付をクリックしたときの処理
     for (int i = 0; i < dayTexts.length; i++) {
       final Date newShowingDate = monthDates[i];
       dayTexts[i].setOnClickListener(v -> {

@@ -15,6 +15,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.example.mytodo.R;
 import com.example.mytodo.utils.DateUtils;
+import com.example.mytodo.utils.TouchUtils;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -24,10 +25,6 @@ public class WeekFragment extends Fragment {
   private MainActivity mainActivity;
 
   private GestureDetector gestureDetector;
-
-  // ボタンのクリック処理が連続して発火しないようにするためのフラグ
-  private boolean isButtonClicked = false;
-  private static final long DEBOUNCE_DELAY_MS = 300; // デバウンス遅延時間（ミリ秒）
 
   public WeekFragment() {
   }
@@ -101,42 +98,14 @@ public class WeekFragment extends Fragment {
       setDateAndHighlight(textViews[i], circleViews[i], weekDates[i]);
     }
 
-//    ここからTextViewにDayFragmentに移動するためのクリックイベントを設定
+//    スワイプを検出するための GestureDetector を作成
     gestureDetector = new GestureDetector(getContext(), mainActivity.new GestureListener());
+
+//    weekLayoutにスワイプよりもタッチを優先する設定
     LinearLayout weekLayout = view.findViewById(R.id.weekLayout);
+    TouchUtils.setPriorityOnClickListener(weekLayout, textViews, gestureDetector, 0, getContext());
 
-    weekLayout.setOnTouchListener((v, event) -> {
-      boolean isGestureDetected = gestureDetector.onTouchEvent(event);
-
-      // タッチイベントの座標を取得
-      float x = event.getX();
-      float y = event.getY();
-
-      // ボタンの位置とサイズを取得
-      Rect buttonRect = new Rect();
-
-      for (TextView textView : textViews) {
-        textView.getHitRect(buttonRect);
-        // タッチがボタンの領域内にあるかどうかをチェック
-        if (buttonRect.contains((int) x, (int) y)) {
-          // ボタンがタッチされた場合
-          if (!isButtonClicked) {
-            isButtonClicked = true;
-            textView.performClick();
-
-            // デバウンス処理のために、一定時間後にフラグをリセット
-            new Handler().postDelayed(() -> isButtonClicked = false, DEBOUNCE_DELAY_MS);
-
-            // イベントを消費して、スクロールを無効にする
-            return true;
-          }
-        }
-      }
-
-      // 横スワイプ
-      return true;
-    });
-
+//    日付をクリックしたときの処理
     for (int i = 0; i < textViews.length; i++) {
       final Date newShowingDate = weekDates[i];
       textViews[i].setOnClickListener(v -> {
