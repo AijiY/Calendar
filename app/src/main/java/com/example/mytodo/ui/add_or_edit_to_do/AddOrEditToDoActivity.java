@@ -10,7 +10,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -26,6 +25,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.mytodo.R;
 import com.example.mytodo.data.model.Plan;
+import com.example.mytodo.data.model.Result;
 import com.example.mytodo.data.model.Task;
 import com.example.mytodo.ui.main.MainActivity;
 import com.google.android.material.textfield.TextInputEditText;
@@ -54,6 +54,7 @@ public class AddOrEditToDoActivity extends AppCompatActivity {
     Button storeButton = findViewById(R.id.storeButton);
     RadioButton planRadioButton = findViewById(R.id.planRadioButton);
     RadioButton taskRadioButton = findViewById(R.id.taskRadioButton);
+    RadioButton recordRadioButton = findViewById(R.id.recordRadioButton);
     Switch allDaySwitch = findViewById(R.id.allDaySwitch);
     LinearLayout startTimeContainer = findViewById(R.id.startTimeContainer);
     LinearLayout endTimeContainer = findViewById(R.id.endTimeContainer);
@@ -62,6 +63,7 @@ public class AddOrEditToDoActivity extends AppCompatActivity {
     TextInputEditText titleInput = findViewById(R.id.titleInput);
     TextInputEditText detailsInput = findViewById(R.id.detailsInput);
     Spinner categorySpinner = findViewById(R.id.categorySpinner);
+    LinearLayout categoryContainer = findViewById(R.id.categoryContainer);
 
     // カテゴリーのスピナーをカスタムレイアウトで表示
     ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
@@ -100,9 +102,12 @@ public class AddOrEditToDoActivity extends AppCompatActivity {
         endTimeContainer.setVisibility(View.GONE);
         allDaySwitch.setChecked(false);
         allDaySwitch.setVisibility(View.GONE);
+        categorySpinner.setSelection(0);
+        categoryContainer.setVisibility(View.GONE);
       } else {
         endTimeContainer.setVisibility(View.VISIBLE);
         allDaySwitch.setVisibility(View.VISIBLE);
+        categoryContainer.setVisibility(View.VISIBLE);
       }
     });
 
@@ -121,7 +126,41 @@ public class AddOrEditToDoActivity extends AppCompatActivity {
     editStartTime = findViewById(R.id.editStartTime);
     editEndTime = findViewById(R.id.editEndTime);
 
-//    初期値設定
+//    時刻初期値設定
+    setInitialDateTime();
+
+//    時間編集イベント
+    editStartDate.setOnClickListener(v -> showStartDatePicker(calendarStart, editStartDate, calendarEnd, editEndDate));
+    editEndDate.setOnClickListener(v -> showEndDatePicker(calendarEnd, editEndDate, calendarStart));
+    editStartTime.setOnClickListener(v -> showStartTimePicker(calendarStart, editStartTime, calendarEnd, editEndTime, editEndDate));
+    editEndTime.setOnClickListener(v -> showEndTimePicker(calendarEnd, editEndTime, calendarStart));
+
+    // タスクの保存処理
+    storeButton.setOnClickListener(v -> {
+      String title = titleInput.getText().toString();
+      String details = detailsInput.getText().toString();
+      if (title.isEmpty()) {
+        // トーストメッセージで警告
+        Toast.makeText(this, "Input title.", Toast.LENGTH_SHORT).show();
+        return; // 処理を終了してリスナーを抜ける
+      }
+      if (planRadioButton.isChecked()) {
+        // allDaySwitch がチェックされている場合の処理
+        addNewPlan(title, details, calendarStart, calendarEnd, allDaySwitch, categorySpinner);
+      } else if (taskRadioButton.isChecked()) {
+        MainActivity.tasks.add(new Task(title, details, calendarStart));
+      } else {
+        MainActivity.results.add(new Result(title, details, calendarStart, calendarEnd, allDaySwitch.isChecked(), categorySpinner.getSelectedItem().toString()));
+      }
+
+      Intent intent = new Intent(AddOrEditToDoActivity.this, MainActivity.class);
+      intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+      startActivity(intent);
+      finish(); // AddOrEditToDoActivity を終了
+    });
+  }
+
+  private void setInitialDateTime() {
     calendarStart = Calendar.getInstance();
     calendarStart.setTime(showingDate);
     calendarEnd = Calendar.getInstance();
@@ -140,60 +179,6 @@ public class AddOrEditToDoActivity extends AppCompatActivity {
     updateDateLabel(editEndDate, calendarEnd);
     updateTimeLabel(editStartTime, calendarStart);
     updateTimeLabel(editEndTime, calendarEnd);
-
-
-//    時間編集イベント
-    editStartDate.setOnClickListener(v -> showStartDatePicker(calendarStart, editStartDate, calendarEnd, editEndDate));
-    editEndDate.setOnClickListener(v -> showEndDatePicker(calendarEnd, editEndDate, calendarStart));
-    editStartTime.setOnClickListener(v -> showStartTimePicker(calendarStart, editStartTime, calendarEnd, editEndTime, editEndDate));
-    editEndTime.setOnClickListener(v -> showEndTimePicker(calendarEnd, editEndTime, calendarStart));
-
-    // タスクの保存処理
-    storeButton.setOnClickListener(v -> {
-      String title = titleInput.getText().toString();
-      String details = detailsInput.getText().toString();
-      if (title.isEmpty()) {
-        // タイトルが空の場合、警告ダイアログを表示
-        new AlertDialog.Builder(AddOrEditToDoActivity.this)
-            .setTitle("Warning")
-            .setMessage("Input title.")
-            .setPositiveButton("OK", (dialog, which) -> dialog.dismiss()) // OKボタンでダイアログを閉じる
-            .show();
-        return; // 処理を終了してリスナーを抜ける
-      }
-      if (planRadioButton.isChecked()) {
-        // allDaySwitch がチェックされている場合の処理
-        if (allDaySwitch.isChecked()) {
-          // calendarStart を 0時に設定
-          calendarStart.set(Calendar.HOUR_OF_DAY, 0);
-          calendarStart.set(Calendar.MINUTE, 0);
-          calendarStart.set(Calendar.SECOND, 0);
-          calendarStart.set(Calendar.MILLISECOND, 0);
-
-          // calendarEnd を翌日の0時に設定
-          Calendar endDate = (Calendar) calendarStart.clone(); // calendarStart をクローン
-          endDate.add(Calendar.DAY_OF_MONTH, 1); // 1日追加
-          endDate.set(Calendar.HOUR_OF_DAY, 0);
-          endDate.set(Calendar.MINUTE, 0);
-          endDate.set(Calendar.SECOND, 0);
-          endDate.set(Calendar.MILLISECOND, 0);
-
-          calendarEnd.setTime(endDate.getTime()); // calendarEnd に設定
-        }
-
-        // デバッグ用に出力
-        Log.d("DEBUG", "Adjusted Start Date: " + calendarStart.getTime());
-        Log.d("DEBUG", "Adjusted End Date: " + calendarEnd.getTime());
-        MainActivity.plans.add(new Plan(title, details, calendarStart, calendarEnd, allDaySwitch.isChecked(), categorySpinner.getSelectedItem().toString()));
-      } else {
-        MainActivity.tasks.add(new Task(title, details, calendarStart));
-      }
-
-      Intent intent = new Intent(AddOrEditToDoActivity.this, MainActivity.class);
-      intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-      startActivity(intent);
-      finish(); // AddOrEditToDoActivity を終了
-    });
   }
 
   private void showEndDatePicker(Calendar calendarEnd, EditText editEndDate, Calendar calendarStart) {
@@ -206,15 +191,8 @@ public class AddOrEditToDoActivity extends AppCompatActivity {
 
       // 逆転チェック
       if (calendarEnd.before(calendarStart) || calendarEnd.equals(calendarStart)) {
-        // 逆転している場合、ユーザーに警告を表示
-        new AlertDialog.Builder(AddOrEditToDoActivity.this)
-            .setTitle("Warning")
-            .setMessage("End time must be after start time.")
-            .setPositiveButton("OK", (dialog, which) -> {
-              // OKボタンが押されたら、もう一度日付を選択できるようにする
-              dialog.dismiss();
-            })
-            .show();
+        // トーストメッセージで警告
+        Toast.makeText(this, "End time must be after start time.", Toast.LENGTH_SHORT).show();
         // calendarEndを変更前の日付に戻す
         calendarEnd.setTime(previousEndDate.getTime());
       } else {
@@ -236,15 +214,8 @@ public class AddOrEditToDoActivity extends AppCompatActivity {
 
       // 逆転チェック
       if (calendarEnd.before(calendarStart) || calendarEnd.equals(calendarStart)) {
-        // 逆転している場合、ユーザーに警告を表示
-        new AlertDialog.Builder(AddOrEditToDoActivity.this)
-            .setTitle("Warning")
-            .setMessage("End time must be after start time.")
-            .setPositiveButton("OK", (dialog, which) -> {
-              // OKボタンが押されたら、もう一度時間を選択できるようにする
-              dialog.dismiss();
-            })
-            .show();
+        // トーストメッセージで警告
+        Toast.makeText(this, "End time must be after start time.", Toast.LENGTH_SHORT).show();
         // calendarEndを変更前の時間に戻す
         calendarEnd.setTime(previousEndTime.getTime());
       } else {
@@ -354,7 +325,7 @@ public class AddOrEditToDoActivity extends AppCompatActivity {
         // 重複チェック
         if (newItem.isEmpty() || MainActivity.categories.contains(newItem)) {
           // トーストメッセージで警告
-          Toast.makeText(this, "Category already exists or is empty", Toast.LENGTH_SHORT).show();
+          Toast.makeText(this, "Category already exists or is empty.", Toast.LENGTH_SHORT).show();
         } else {
           // 新しいカテゴリを追加
           MainActivity.categories.add(newItem);
@@ -370,6 +341,27 @@ public class AddOrEditToDoActivity extends AppCompatActivity {
 
     // ダイアログを表示
     dialog.show();
+  }
+
+  private void addNewPlan(String title, String details, Calendar calendarStart, Calendar calendarEnd, Switch allDaySwitch, Spinner categorySpinner) {
+    if (allDaySwitch.isChecked()) {
+      // calendarStart を 0時に設定
+      calendarStart.set(Calendar.HOUR_OF_DAY, 0);
+      calendarStart.set(Calendar.MINUTE, 0);
+      calendarStart.set(Calendar.SECOND, 0);
+      calendarStart.set(Calendar.MILLISECOND, 0);
+
+      // calendarEnd を翌日の0時に設定
+      Calendar endDate = (Calendar) calendarStart.clone(); // calendarStart をクローン
+      endDate.add(Calendar.DAY_OF_MONTH, 1); // 1日追加
+      endDate.set(Calendar.HOUR_OF_DAY, 0);
+      endDate.set(Calendar.MINUTE, 0);
+      endDate.set(Calendar.SECOND, 0);
+      endDate.set(Calendar.MILLISECOND, 0);
+
+      calendarEnd.setTime(endDate.getTime()); // calendarEnd に設定
+    }
+    MainActivity.plans.add(new Plan(title, details, calendarStart, calendarEnd, allDaySwitch.isChecked(), categorySpinner.getSelectedItem().toString()));
   }
 
   // 戻るボタンでActivity終了
