@@ -25,6 +25,7 @@ import android.widget.Switch;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.example.mytodo.R;
+import com.example.mytodo.data.model.Category;
 import com.example.mytodo.data.model.Plan;
 import com.example.mytodo.data.model.Result;
 import com.example.mytodo.data.model.Task;
@@ -33,6 +34,8 @@ import com.example.mytodo.database.MyToDoDatabase;
 import com.example.mytodo.ui.main.MainActivity;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
@@ -40,8 +43,8 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class AddOrEditToDoActivity extends AppCompatActivity {
   private EditText editStartDate;
@@ -56,6 +59,8 @@ public class AddOrEditToDoActivity extends AppCompatActivity {
 
   private MyToDoDatabase db;
   private MyDao myDao;
+
+  private List<String> categories;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -82,17 +87,24 @@ public class AddOrEditToDoActivity extends AppCompatActivity {
     db = MyToDoDatabase.getDatabase(this);
     myDao = db.myDao();
 
-    // カテゴリーのスピナーをカスタムレイアウトで表示
-    ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
-        R.layout.spinner_item, // アイテム表示用のカスタムレイアウト
-        MainActivity.categories);
+    // データベースからカテゴリを取得してSpinnerに設定
+    Executor executor = Executors.newSingleThreadExecutor();
+    executor.execute(() -> {
+      // データベースからカテゴリを全件取得
+      categories = myDao.getAllCategoryNames();
 
-    adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+      // UIスレッドでSpinnerに反映
+      runOnUiThread(() -> {
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
+            R.layout.spinner_item, // アイテム表示用のカスタムレイアウト
+            categories);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-    Spinner spinner = findViewById(R.id.categorySpinner);
-    spinner.setAdapter(adapter);
+        categorySpinner.setAdapter(adapter);
+      });
+    });
 
-    spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+    categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
       @Override
       public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         if (position == 1) { // 「Add New」なら
@@ -172,30 +184,34 @@ public class AddOrEditToDoActivity extends AppCompatActivity {
         new Thread(() -> myDao.insertResult(result)).start();
       }
 
-////  デバッグ
-//      new Thread(() -> {
-//        // データベースからデータを取得
-//        List<Plan> plans = myDao.getAllPlans();
-//        List<Task> tasks = myDao.getAllTasks();
-//        List<Result> results = myDao.getAllResults();
-//
-//        // Gsonのインスタンスを作成（インデント付き）
-//        Gson gson = new GsonBuilder().setPrettyPrinting().create();
-//
-//        Type plansType = new TypeToken<List<Plan>>() {}.getType();
-//        Type tasksType = new TypeToken<List<Task>>() {}.getType();
-//        Type resultsType = new TypeToken<List<Result>>() {}.getType();
-//
-//        String plansJson = gson.toJson(plans, plansType);
-//        String tasksJson = gson.toJson(tasks, tasksType);
-//        String resultsJson = gson.toJson(results, resultsType);
-//
-//        // 整形してログに出力
-//        Log.d("MyTag", "Plans JSON:\n" + plansJson);
-//        Log.d("MyTag", "Tasks JSON:\n" + tasksJson);
-//        Log.d("MyTag", "Results JSON:\n" + resultsJson);
-//      }).start();
-////      デバッグ終了
+//  デバッグ
+      new Thread(() -> {
+        // データベースからデータを取得
+        List<Plan> plans = myDao.getAllPlans();
+        List<Task> tasks = myDao.getAllTasks();
+        List<Result> results = myDao.getAllResults();
+        List<Category> categories2 = myDao.getAllCategories();
+
+        // Gsonのインスタンスを作成（インデント付き）
+        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+        Type plansType = new TypeToken<List<Plan>>() {}.getType();
+        Type tasksType = new TypeToken<List<Task>>() {}.getType();
+        Type resultsType = new TypeToken<List<Result>>() {}.getType();
+        Type categoriesType = new TypeToken<List<Category>>() {}.getType();
+
+        String plansJson = gson.toJson(plans, plansType);
+        String tasksJson = gson.toJson(tasks, tasksType);
+        String resultsJson = gson.toJson(results, resultsType);
+        String categoriesJson = gson.toJson(categories2, categoriesType);
+
+        // 整形してログに出力
+        Log.d("MyTag", "Plans JSON:\n" + plansJson);
+        Log.d("MyTag", "Tasks JSON:\n" + tasksJson);
+        Log.d("MyTag", "Results JSON:\n" + resultsJson);
+        Log.d("MyTag", "Categories JSON:\n" + categoriesJson);
+      }).start();
+//      デバッグ終了
 
       Intent intent = new Intent(AddOrEditToDoActivity.this, MainActivity.class);
       intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -367,18 +383,35 @@ public class AddOrEditToDoActivity extends AppCompatActivity {
         ArrayAdapter<String> adapter = (ArrayAdapter<String>) categorySpinner.getAdapter();
 
         // 重複チェック
-        if (newItem.isEmpty() || MainActivity.categories.contains(newItem)) {
+        if (newItem.isEmpty() || categories.contains(newItem)) {
           // トーストメッセージで警告
           Toast.makeText(this, "Category already exists or is empty.", Toast.LENGTH_SHORT).show();
         } else {
-          // 新しいカテゴリを追加
-          MainActivity.categories.add(newItem);
-          adapter.notifyDataSetChanged();
+          // Executorを使用して非同期でデータベース操作を実行
+          Executor executor = Executors.newSingleThreadExecutor();
+          executor.execute(() -> {
+            // 1. newItem を Category テーブルに追加
+            Category newCategory = new Category(newItem);
+            myDao.insertCategory(newCategory);
 
-          // 新しいアイテムを選択する
-          currentCategorySelection = adapter.getPosition(newItem);
-          categorySpinner.setSelection(currentCategorySelection);
-          dialog.dismiss(); // 正常な場合のみダイアログを閉じる
+            // 2. categories を更新されたデータベースの内容で上書き
+            categories = myDao.getAllCategoryNames();
+
+            // UIスレッドでSpinnerを更新
+            runOnUiThread(() -> {
+              // 3. Spinnerのアダプターに変更を通知
+              adapter.clear();
+              adapter.addAll(categories);
+              adapter.notifyDataSetChanged();
+
+              // 4. 新しいアイテムを選択する
+              currentCategorySelection = adapter.getPosition(newItem);
+              categorySpinner.setSelection(currentCategorySelection);
+
+              // 5. ダイアログを閉じる
+              dialog.dismiss(); // 正常な場合のみダイアログを閉じる
+            });
+          });
         }
       });
     });

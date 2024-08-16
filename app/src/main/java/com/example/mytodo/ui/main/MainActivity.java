@@ -32,11 +32,11 @@ public class MainActivity extends AppCompatActivity {
   public static final Date presentDate = new Date();
   public static Date showingDate = presentDate;
 
-  public static List<Plan> plans = new ArrayList<>();
-  public static List<Task> tasks = new ArrayList<>();
-  public static List<Result> results = new ArrayList<>();
-  public static List<String> categories = new ArrayList<>(
-      Arrays.asList("none", "Add New"));
+//  public static List<Plan> plans = new ArrayList<>();
+//  public static List<Task> tasks = new ArrayList<>();
+//  public static List<Result> results = new ArrayList<>();
+//  public static List<String> categories = new ArrayList<>(
+//      Arrays.asList("none", "Add New"));
 
   public static TabLayout dateTypeTabLayout;
   private GestureDetector gestureDetector;
