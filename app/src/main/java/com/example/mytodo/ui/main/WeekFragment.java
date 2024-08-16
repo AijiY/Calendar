@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.example.mytodo.R;
+import com.example.mytodo.utils.DateUtils;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -154,42 +155,13 @@ public class WeekFragment extends Fragment {
   }
 
   private void setDateAndHighlight(TextView textView, View circleView, Date date) {
-    textView.setText(formatDate(date));
-    if (isSameDay(date, mainActivity.presentDate)) {
+    textView.setText(DateUtils.formatDate(date));
+    if (DateUtils.isSameDay(date, mainActivity.presentDate)) {
       circleView.setVisibility(View.VISIBLE); // presentDate と一致する場合、円形の View を表示
     } else {
       circleView.setVisibility(View.GONE); // 他のテキストビューは円形の View を非表示
     }
   }
 
-  // presentDate と比較するための日付が同じ日かどうかを確認するヘルパーメソッド
-  private boolean isSameDay(Date date1, Date date2) {
-    Calendar cal1 = Calendar.getInstance();
-    Calendar cal2 = Calendar.getInstance();
-    cal1.setTime(date1);
-    cal2.setTime(date2);
-    return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
-        cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
-  }
 
-  private String formatDate(Date date) {
-    SimpleDateFormat sdf = new SimpleDateFormat("d'st'", Locale.ENGLISH);
-    Calendar calendar = Calendar.getInstance();
-    calendar.setTime(date);
-    int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-
-    // 日付のサフィックス (st, nd, rd, th) を決定
-    if (dayOfMonth >= 11 && dayOfMonth <= 13) {
-      sdf = new SimpleDateFormat("d'th'", Locale.ENGLISH);
-    } else {
-      switch (dayOfMonth % 10) {
-        case 1: sdf = new SimpleDateFormat("d'st'", Locale.ENGLISH); break;
-        case 2: sdf = new SimpleDateFormat("d'nd'", Locale.ENGLISH); break;
-        case 3: sdf = new SimpleDateFormat("d'rd'", Locale.ENGLISH); break;
-        default: sdf = new SimpleDateFormat("d'th'", Locale.ENGLISH); break;
-      }
-    }
-
-    return sdf.format(date);
-  }
 }
