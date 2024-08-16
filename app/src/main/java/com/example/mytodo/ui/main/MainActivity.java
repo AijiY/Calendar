@@ -1,4 +1,4 @@
-package com.example.mytodo;
+package com.example.mytodo.ui.main;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -9,12 +9,15 @@ import android.os.Handler;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import com.example.mytodo.ui.add_or_edit_to_do.AddOrEditToDoActivity;
+import com.example.mytodo.R;
+import com.example.mytodo.data.model.Plan;
+import com.example.mytodo.data.model.Task;
 import com.google.android.material.tabs.TabLayout;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -128,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
 
 //    ボタンクリックイベント
     addButton.setOnClickListener(v -> {
-      Intent intent = new Intent(MainActivity.this, AddToDoActivity.class);
+      Intent intent = new Intent(MainActivity.this, AddOrEditToDoActivity.class);
       startActivity(intent);
     });
 
