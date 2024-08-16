@@ -2,7 +2,7 @@ package com.example.mytodo.data.model;
 
 import java.util.Calendar;
 
-public class Plan {
+public class Result {
   private String title;
   private String details;
   private Calendar calendarStart;
@@ -10,7 +10,8 @@ public class Plan {
   private boolean isAllDay;
   private String category;
 
-  public Plan(String title, String details, Calendar calendarStart, Calendar calendarEnd, boolean isAllDay, String category) {
+  public Result(String title, String details, Calendar calendarStart, Calendar calendarEnd,
+      boolean isAllDay, String category) {
     this.title = title;
     this.details = details;
     this.calendarStart = calendarStart;

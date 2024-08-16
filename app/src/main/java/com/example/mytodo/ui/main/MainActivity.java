@@ -2,19 +2,17 @@ package com.example.mytodo.ui.main;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.Rect;
 import android.os.Bundle;
 
-import android.os.Handler;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.widget.Button;
 import android.widget.FrameLayout;
-import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import com.example.mytodo.data.model.Result;
 import com.example.mytodo.ui.add_or_edit_to_do.AddOrEditToDoActivity;
 import com.example.mytodo.R;
 import com.example.mytodo.data.model.Plan;
@@ -36,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
   public static List<Plan> plans = new ArrayList<>();
   public static List<Task> tasks = new ArrayList<>();
+  public static List<Result> results = new ArrayList<>();
   public static List<String> categories = new ArrayList<>(
       Arrays.asList("none", "Add New"));
 
