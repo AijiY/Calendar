@@ -1,11 +1,10 @@
-package com.example.mytodo;
+package com.example.mytodo.ui.main;
 
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import com.example.mytodo.R;
 import java.util.Calendar;
 import java.util.Date;
 

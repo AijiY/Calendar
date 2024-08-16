@@ -1,6 +1,6 @@
-package com.example.mytodo;
+package com.example.mytodo.ui.add_or_edit_to_do;
 
-import static com.example.mytodo.MainActivity.showingDate;
+import static com.example.mytodo.ui.main.MainActivity.showingDate;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -17,13 +17,17 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.Switch;
 import androidx.appcompat.app.AppCompatActivity;
+import com.example.mytodo.R;
+import com.example.mytodo.data.model.Plan;
+import com.example.mytodo.data.model.Task;
+import com.example.mytodo.ui.main.MainActivity;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class AddToDoActivity extends AppCompatActivity {
+public class AddOrEditToDoActivity extends AppCompatActivity {
   private EditText editStartDate;
   private EditText editEndDate;
   private EditText editStartTime;
@@ -35,7 +39,7 @@ public class AddToDoActivity extends AppCompatActivity {
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_add_to_do);
+    setContentView(R.layout.activity_add_or_edit_to_do);
 
     Button exitButton = findViewById(R.id.exitButton);
     Button storeButton = findViewById(R.id.storeButton);
@@ -50,10 +54,10 @@ public class AddToDoActivity extends AppCompatActivity {
     TextInputEditText detailsInput = findViewById(R.id.detailsInput);
 
     exitButton.setOnClickListener(v -> {
-      Intent intent = new Intent(AddToDoActivity.this, MainActivity.class);
+      Intent intent = new Intent(AddOrEditToDoActivity.this, MainActivity.class);
       intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
       startActivity(intent);
-      finish(); // AddToDoActivity を終了
+      finish(); // AddOrEditToDoActivity を終了
     });
 
 
@@ -117,7 +121,7 @@ public class AddToDoActivity extends AppCompatActivity {
       String details = detailsInput.getText().toString();
       if (title.isEmpty()) {
         // タイトルが空の場合、警告ダイアログを表示
-        new AlertDialog.Builder(AddToDoActivity.this)
+        new AlertDialog.Builder(AddOrEditToDoActivity.this)
             .setTitle("Warning")
             .setMessage("Input title.")
             .setPositiveButton("OK", (dialog, which) -> dialog.dismiss()) // OKボタンでダイアログを閉じる
@@ -152,15 +156,15 @@ public class AddToDoActivity extends AppCompatActivity {
         MainActivity.tasks.add(new Task(title, details, calendarStart));
       }
 
-      Intent intent = new Intent(AddToDoActivity.this, MainActivity.class);
+      Intent intent = new Intent(AddOrEditToDoActivity.this, MainActivity.class);
       intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
       startActivity(intent);
-      finish(); // AddToDoActivity を終了
+      finish(); // AddOrEditToDoActivity を終了
     });
   }
 
   private void showEndDatePicker(Calendar calendarEnd, EditText editEndDate, Calendar calendarStart) {
-    new DatePickerDialog(AddToDoActivity.this, (view, year, month, dayOfMonth) -> {
+    new DatePickerDialog(AddOrEditToDoActivity.this, (view, year, month, dayOfMonth) -> {
       // 変更前の日付を記録
       Calendar previousEndDate = Calendar.getInstance();
       previousEndDate.setTime(calendarEnd.getTime());
@@ -170,7 +174,7 @@ public class AddToDoActivity extends AppCompatActivity {
       // 逆転チェック
       if (calendarEnd.before(calendarStart) || calendarEnd.equals(calendarStart)) {
         // 逆転している場合、ユーザーに警告を表示
-        new AlertDialog.Builder(AddToDoActivity.this)
+        new AlertDialog.Builder(AddOrEditToDoActivity.this)
             .setTitle("Warning")
             .setMessage("End time must be after start time.")
             .setPositiveButton("OK", (dialog, which) -> {
@@ -188,7 +192,7 @@ public class AddToDoActivity extends AppCompatActivity {
   }
 
   private void showEndTimePicker(Calendar calendarEnd, EditText editEndTime, Calendar calendarStart) {
-    new TimePickerDialog(AddToDoActivity.this, (view, hourOfDay, minute) -> {
+    new TimePickerDialog(AddOrEditToDoActivity.this, (view, hourOfDay, minute) -> {
       // 変更前の時間を記録
       Calendar previousEndTime = Calendar.getInstance();
       previousEndTime.setTime(calendarEnd.getTime());
@@ -200,7 +204,7 @@ public class AddToDoActivity extends AppCompatActivity {
       // 逆転チェック
       if (calendarEnd.before(calendarStart) || calendarEnd.equals(calendarStart)) {
         // 逆転している場合、ユーザーに警告を表示
-        new AlertDialog.Builder(AddToDoActivity.this)
+        new AlertDialog.Builder(AddOrEditToDoActivity.this)
             .setTitle("Warning")
             .setMessage("End time must be after start time.")
             .setPositiveButton("OK", (dialog, which) -> {
@@ -222,7 +226,7 @@ public class AddToDoActivity extends AppCompatActivity {
     Calendar previousStartDate = Calendar.getInstance();
     previousStartDate.setTime(calendarStart.getTime());
 
-    new DatePickerDialog(AddToDoActivity.this, (view, year, month, dayOfMonth) -> {
+    new DatePickerDialog(AddOrEditToDoActivity.this, (view, year, month, dayOfMonth) -> {
       // 変更後の日付を設定
       calendarStart.set(year, month, dayOfMonth);
       updateDateLabel(editStartDate, calendarStart);
@@ -243,7 +247,7 @@ public class AddToDoActivity extends AppCompatActivity {
     Calendar previousStartTime = Calendar.getInstance();
     previousStartTime.setTime(calendarStart.getTime());
 
-    new TimePickerDialog(AddToDoActivity.this, (view, hourOfDay, minute) -> {
+    new TimePickerDialog(AddOrEditToDoActivity.this, (view, hourOfDay, minute) -> {
       // 変更後の時間を設定
       calendarStart.set(Calendar.HOUR_OF_DAY, hourOfDay);
       calendarStart.set(Calendar.MINUTE, minute);
@@ -275,9 +279,9 @@ public class AddToDoActivity extends AppCompatActivity {
   @SuppressLint("MissingSuperCall")
   @Override
   public void onBackPressed() {
-    Intent intent = new Intent(AddToDoActivity.this, MainActivity.class);
+    Intent intent = new Intent(AddOrEditToDoActivity.this, MainActivity.class);
     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
     startActivity(intent);
-    finish(); // AddToDoActivity を終了
+    finish(); // AddOrEditToDoActivity を終了
   }
 }
