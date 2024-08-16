@@ -11,6 +11,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
@@ -19,6 +20,7 @@ import com.example.mytodo.R;
 import com.example.mytodo.data.model.Plan;
 import com.example.mytodo.data.model.Task;
 import com.example.mytodo.utils.DateUtils;
+import com.example.mytodo.utils.TouchUtils;
 import com.google.android.material.tabs.TabLayout;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -83,50 +85,13 @@ public class MainActivity extends AppCompatActivity {
     });
 
     // ここでタッチリスナーを設定（クリックの優先設定）
-    toDoDisplay.setOnTouchListener((v, event) -> {
-      boolean isGestureDetected = gestureDetector.onTouchEvent(event);
-
-      // タッチイベントの座標を取得
-      float x = event.getX();
-      float y = event.getY();
-
-      // ボタンの位置とサイズを取得
-      Rect buttonRect = new Rect();
-      addButton.getHitRect(buttonRect);
-      // Rect の領域を広げる（ここでは 10dp を追加）
-      int padding = (int) (32 * this.getResources().getDisplayMetrics().density); // dp to pixels
-      buttonRect.inset(-padding, -padding); // 領域を広げる
-
-      // タッチがボタンの領域内にあるかどうかをチェック
-      if (buttonRect.contains((int) x, (int) y)) {
-        // ボタンがタッチされた場合
-        if (!isButtonClicked) {
-          isButtonClicked = true;
-          addButton.performClick();
-
-          // デバウンス処理のために、一定時間後にフラグをリセット
-          new Handler().postDelayed(() -> isButtonClicked = false, DEBOUNCE_DELAY_MS);
-
-          // イベントを消費して、スワイプを無効にする
-          return true;
-        }
-      }
-
-      // 横スワイプ
-      return true;
-
-
-    });
+    TouchUtils.setPriorityOnClickListener(toDoDisplay, new Button[]{addButton}, gestureDetector, 32, this);
 
 //    ボタンクリックイベント
     addButton.setOnClickListener(v -> {
       Intent intent = new Intent(MainActivity.this, AddOrEditToDoActivity.class);
       startActivity(intent);
     });
-
-    Log.d("ShowingDate",showingDate.toString());
-
-
   }
 
   public void updateTextViewBasedOnDate(Date date) {
@@ -252,8 +217,6 @@ public class MainActivity extends AppCompatActivity {
     // 現在選択されているタブに基づいてフラグメントを再表示
     displayFragmentForTab(currentTab);
   }
-
-
 
 // 他のActivityがなければ、戻るボタンでアプリを終了
   @SuppressLint("MissingSuperCall")
