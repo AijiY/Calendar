@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -133,9 +134,10 @@ public class MonthFragment extends Fragment {
             dayText.setTextColor(Color.WHITE);
           }
           // 現在の日付に対応する CircleView を表示
+          Log.d("MonthFragment", i + ": " + day + ": " + today.get(Calendar.DAY_OF_MONTH));
           if (calendar.get(Calendar.YEAR) == today.get(Calendar.YEAR) &&
               calendar.get(Calendar.MONTH) == today.get(Calendar.MONTH) &&
-              calendar.get(Calendar.DAY_OF_MONTH) == today.get(Calendar.DAY_OF_MONTH)) {
+              day == today.get(Calendar.DAY_OF_MONTH)) {
             circle.setVisibility(View.VISIBLE);  // 現在の日付に対応する CircleView を表示
           } else {
             circle.setVisibility(View.GONE);     // その他の日付に対応する CircleView を非表示

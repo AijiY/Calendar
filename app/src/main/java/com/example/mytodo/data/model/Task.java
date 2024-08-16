@@ -1,18 +1,35 @@
 package com.example.mytodo.data.model;
 
-import java.util.Calendar;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 
+@Entity(tableName = "Task")
 public class Task {
+  @PrimaryKey(autoGenerate = true)
+  private int id;
+
+  @ColumnInfo(name = "title")
   private String title;
-  private String description;
-  private Calendar calendarStart;
+
+  @ColumnInfo(name = "details")
+  private String details;
+
+  @ColumnInfo(name = "finished")
   private boolean finished;
 
-  public Task(String title, String description, Calendar calendarStart) {
+  public Task(String title, String details, boolean finished) {
     this.title = title;
-    this.description = description;
-    this.calendarStart = calendarStart;
-    finished = false;
+    this.details = details;
+    this.finished = finished;
+  }
+
+  public int getId() {
+    return id;
+  }
+
+  public void setId(int id) {
+    this.id = id;
   }
 
   public String getTitle() {
@@ -23,27 +40,20 @@ public class Task {
     this.title = title;
   }
 
-  public String getDescription() {
-    return description;
+  public String getDetails() {
+    return details;
   }
 
-  public void setDescription(String description) {
-    this.description = description;
+  public void setDetails(String details) {
+    this.details = details;
   }
 
-  public Calendar getCalendarStart() {
-    return calendarStart;
-  }
-
-  public void setCalendarStart(Calendar calendarStart) {
-    this.calendarStart = calendarStart;
-  }
-
-  public boolean getFinished() {
+  public boolean isFinished() {
     return finished;
   }
 
   public void setFinished(boolean finished) {
     this.finished = finished;
   }
+
 }

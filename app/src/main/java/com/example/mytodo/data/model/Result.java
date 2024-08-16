@@ -1,23 +1,51 @@
 package com.example.mytodo.data.model;
 
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
 import java.util.Calendar;
+import java.util.Date;
 
+@Entity(tableName = "Result")
 public class Result {
+  @PrimaryKey(autoGenerate = true)
+  private int id;
+
+  @ColumnInfo(name = "title")
   private String title;
+
+  @ColumnInfo(name = "details")
   private String details;
-  private Calendar calendarStart;
-  private Calendar calendarEnd;
-  private boolean isAllDay;
+
+  @ColumnInfo(name = "category")
   private String category;
 
-  public Result(String title, String details, Calendar calendarStart, Calendar calendarEnd,
-      boolean isAllDay, String category) {
+  @ColumnInfo(name = "is_all_day")
+  private boolean isAllDay;
+
+  @ColumnInfo(name = "calendar_start")
+  private Calendar calendarStart;
+
+  @ColumnInfo(name = "calendar_end")
+  private Calendar calendarEnd;
+
+  public Result(String title, String details, String category, boolean isAllDay,
+      Calendar calendarStart,
+      Calendar calendarEnd) {
     this.title = title;
     this.details = details;
+    this.category = category;
+    this.isAllDay = isAllDay;
     this.calendarStart = calendarStart;
     this.calendarEnd = calendarEnd;
-    this.isAllDay = isAllDay;
-    this.category = category;
+  }
+
+  public int getId() {
+    return id;
+  }
+
+  public void setId(int id) {
+    this.id = id;
   }
 
   public String getTitle() {
@@ -36,6 +64,22 @@ public class Result {
     this.details = details;
   }
 
+  public String getCategory() {
+    return category;
+  }
+
+  public void setCategory(String category) {
+    this.category = category;
+  }
+
+  public boolean isAllDay() {
+    return isAllDay;
+  }
+
+  public void setAllDay(boolean allDay) {
+    isAllDay = allDay;
+  }
+
   public Calendar getCalendarStart() {
     return calendarStart;
   }
@@ -50,21 +94,5 @@ public class Result {
 
   public void setCalendarEnd(Calendar calendarEnd) {
     this.calendarEnd = calendarEnd;
-  }
-
-  public boolean isAllDay() {
-    return isAllDay;
-  }
-
-  public void setAllDay(boolean allDay) {
-    isAllDay = allDay;
-  }
-
-  public String getCategory() {
-    return category;
-  }
-
-  public void setCategory(String category) {
-    this.category = category;
   }
 }
