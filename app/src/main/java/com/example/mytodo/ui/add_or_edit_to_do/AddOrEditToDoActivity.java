@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -27,12 +28,20 @@ import com.example.mytodo.R;
 import com.example.mytodo.data.model.Plan;
 import com.example.mytodo.data.model.Result;
 import com.example.mytodo.data.model.Task;
+import com.example.mytodo.database.MyDao;
+import com.example.mytodo.database.MyToDoDatabase;
 import com.example.mytodo.ui.main.MainActivity;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
+import com.google.gson.reflect.TypeToken;
+import java.lang.reflect.Type;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 public class AddOrEditToDoActivity extends AppCompatActivity {
   private EditText editStartDate;
@@ -45,11 +54,15 @@ public class AddOrEditToDoActivity extends AppCompatActivity {
 
   private int currentCategorySelection = 0;
 
+  private MyToDoDatabase db;
+  private MyDao myDao;
+
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_add_or_edit_to_do);
 
+//　レイアウトの各ビューを取得
     Button exitButton = findViewById(R.id.exitButton);
     Button storeButton = findViewById(R.id.storeButton);
     RadioButton planRadioButton = findViewById(R.id.planRadioButton);
@@ -64,6 +77,10 @@ public class AddOrEditToDoActivity extends AppCompatActivity {
     TextInputEditText detailsInput = findViewById(R.id.detailsInput);
     Spinner categorySpinner = findViewById(R.id.categorySpinner);
     LinearLayout categoryContainer = findViewById(R.id.categoryContainer);
+
+//    データベース初期設定
+    db = MyToDoDatabase.getDatabase(this);
+    myDao = db.myDao();
 
     // カテゴリーのスピナーをカスタムレイアウトで表示
     ArrayAdapter<String> adapter = new ArrayAdapter<>(this,
@@ -148,10 +165,37 @@ public class AddOrEditToDoActivity extends AppCompatActivity {
         // allDaySwitch がチェックされている場合の処理
         addNewPlan(title, details, calendarStart, calendarEnd, allDaySwitch, categorySpinner);
       } else if (taskRadioButton.isChecked()) {
-        MainActivity.tasks.add(new Task(title, details, calendarStart));
+        Task task = new Task(title, details, false);
+        new Thread(() -> myDao.insertTask(task)).start();
       } else {
-        MainActivity.results.add(new Result(title, details, calendarStart, calendarEnd, allDaySwitch.isChecked(), categorySpinner.getSelectedItem().toString()));
+        Result result = new Result(title, details, categorySpinner.getSelectedItem().toString(), allDaySwitch.isChecked(), calendarStart, calendarEnd);
+        new Thread(() -> myDao.insertResult(result)).start();
       }
+
+////  デバッグ
+//      new Thread(() -> {
+//        // データベースからデータを取得
+//        List<Plan> plans = myDao.getAllPlans();
+//        List<Task> tasks = myDao.getAllTasks();
+//        List<Result> results = myDao.getAllResults();
+//
+//        // Gsonのインスタンスを作成（インデント付き）
+//        Gson gson = new GsonBuilder().setPrettyPrinting().create();
+//
+//        Type plansType = new TypeToken<List<Plan>>() {}.getType();
+//        Type tasksType = new TypeToken<List<Task>>() {}.getType();
+//        Type resultsType = new TypeToken<List<Result>>() {}.getType();
+//
+//        String plansJson = gson.toJson(plans, plansType);
+//        String tasksJson = gson.toJson(tasks, tasksType);
+//        String resultsJson = gson.toJson(results, resultsType);
+//
+//        // 整形してログに出力
+//        Log.d("MyTag", "Plans JSON:\n" + plansJson);
+//        Log.d("MyTag", "Tasks JSON:\n" + tasksJson);
+//        Log.d("MyTag", "Results JSON:\n" + resultsJson);
+//      }).start();
+////      デバッグ終了
 
       Intent intent = new Intent(AddOrEditToDoActivity.this, MainActivity.class);
       intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -361,7 +405,8 @@ public class AddOrEditToDoActivity extends AppCompatActivity {
 
       calendarEnd.setTime(endDate.getTime()); // calendarEnd に設定
     }
-    MainActivity.plans.add(new Plan(title, details, calendarStart, calendarEnd, allDaySwitch.isChecked(), categorySpinner.getSelectedItem().toString()));
+    Plan plan = new Plan(title, details, categorySpinner.getSelectedItem().toString(), allDaySwitch.isChecked(), calendarStart, calendarEnd);
+    new Thread(() -> myDao.insertPlan(plan)).start();
   }
 
   // 戻るボタンでActivity終了
