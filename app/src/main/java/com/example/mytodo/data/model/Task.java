@@ -3,6 +3,7 @@ package com.example.mytodo.data.model;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
+import java.util.Calendar;
 
 @Entity(tableName = "Task")
 public class Task {
@@ -15,12 +16,16 @@ public class Task {
   @ColumnInfo(name = "details")
   private String details;
 
+  @ColumnInfo(name = "calendar_start")
+  private Calendar calendarStart;
+
   @ColumnInfo(name = "finished")
   private boolean finished;
 
-  public Task(String title, String details, boolean finished) {
+  public Task(String title, String details, Calendar calendarStart, boolean finished) {
     this.title = title;
     this.details = details;
+    this.calendarStart = calendarStart;
     this.finished = finished;
   }
 
@@ -46,6 +51,14 @@ public class Task {
 
   public void setDetails(String details) {
     this.details = details;
+  }
+
+  public Calendar getCalendarStart() {
+    return calendarStart;
+  }
+
+  public void setCalendarStart(Calendar calendarStart) {
+    this.calendarStart = calendarStart;
   }
 
   public boolean isFinished() {

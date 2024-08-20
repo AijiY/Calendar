@@ -128,10 +128,10 @@ public class AddOrEditToDoActivity extends AppCompatActivity {
       String categoriesJson = gson.toJson(categories2, categoriesType);
 
       // 整形してログに出力
-      Log.d("MyTag", "Plans JSON:\n" + plansJson);
-      Log.d("MyTag", "Tasks JSON:\n" + tasksJson);
-      Log.d("MyTag", "Results JSON:\n" + resultsJson);
-      Log.d("MyTag", "Categories JSON:\n" + categoriesJson);
+      Log.d("BeforeAddOrEdit", "Plans JSON:\n" + plansJson);
+      Log.d("BeforeAddOrEdit", "Tasks JSON:\n" + tasksJson);
+      Log.d("BeforeAddOrEdit", "Results JSON:\n" + resultsJson);
+      Log.d("BeforeAddOrEdit", "Categories JSON:\n" + categoriesJson);
     }).start();
 //      デバッグ終了
 
@@ -206,15 +206,15 @@ public class AddOrEditToDoActivity extends AppCompatActivity {
       }
       if (planRadioButton.isChecked()) {
         boolean isAllDay = allDaySwitch.isChecked();
-        Plan plan = new Plan(title, details, categorySpinner.getSelectedItem().toString(), allDaySwitch.isChecked(),
+        Plan plan = new Plan(title, details, categorySpinner.getSelectedItem().toString(), isAllDay,
             calendarStartWithAllDay(calendarStart, isAllDay), calendarEndWithAllDay(calendarEnd, isAllDay));
         new Thread(() -> myDao.insertPlan(plan)).start();
       } else if (taskRadioButton.isChecked()) {
-        Task task = new Task(title, details, false);
+        Task task = new Task(title, details, calendarStart, false);
         new Thread(() -> myDao.insertTask(task)).start();
       } else {
         boolean isAllDay = allDaySwitch.isChecked();
-        Result result = new Result(title, details, categorySpinner.getSelectedItem().toString(), allDaySwitch.isChecked(),
+        Result result = new Result(title, details, categorySpinner.getSelectedItem().toString(), isAllDay,
             calendarStartWithAllDay(calendarStart, isAllDay), calendarEndWithAllDay(calendarEnd, isAllDay));
         new Thread(() -> myDao.insertResult(result)).start();
       }
@@ -241,10 +241,10 @@ public class AddOrEditToDoActivity extends AppCompatActivity {
         String categoriesJson = gson.toJson(categories2, categoriesType);
 
         // 整形してログに出力
-        Log.d("MyTag", "Plans JSON:\n" + plansJson);
-        Log.d("MyTag", "Tasks JSON:\n" + tasksJson);
-        Log.d("MyTag", "Results JSON:\n" + resultsJson);
-        Log.d("MyTag", "Categories JSON:\n" + categoriesJson);
+        Log.d("AfterAddOrEdit", "Plans JSON:\n" + plansJson);
+        Log.d("AfterAddOrEdit", "Tasks JSON:\n" + tasksJson);
+        Log.d("AfterAddOrEdit", "Results JSON:\n" + resultsJson);
+        Log.d("AfterAddOrEdit", "Categories JSON:\n" + categoriesJson);
       }).start();
 //      デバッグ終了
 

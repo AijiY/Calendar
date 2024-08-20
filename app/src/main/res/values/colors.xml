@@ -9,4 +9,8 @@
   <color name="blue_white">#6F6FFF</color>
   <color name="green">#008000</color>
   <color name="transparent">#00000000</color>
+  <color name="plan">#4169E1</color> <!-- royalblue -->
+  <color name="taskUnfinished">#000080</color> <!-- navy -->
+  <color name="taskFinished">#00BFFF</color> <!-- deepskyblue -->
+  <color name="result">#00FF7F</color> <!-- springgreen -->
 </resources>
