@@ -31,7 +31,8 @@
       </FrameLayout>
       <View
         style="@style/verticalBorder" />
-      <FrameLayout
+      <LinearLayout
+        android:id="@+id/sunTaskView"
         style="@style/weekdayTaskView" />
     </LinearLayout>
 
@@ -55,7 +56,8 @@
       </FrameLayout>
       <View
         style="@style/verticalBorder" />
-      <FrameLayout
+      <LinearLayout
+        android:id="@+id/monTaskView"
         style="@style/weekdayTaskView" />
     </LinearLayout>
 
@@ -79,7 +81,8 @@
       </FrameLayout>
       <View
         style="@style/verticalBorder" />
-      <FrameLayout
+      <LinearLayout
+        android:id="@+id/tueTaskView"
         style="@style/weekdayTaskView" />
     </LinearLayout>
 
@@ -103,7 +106,8 @@
       </FrameLayout>
       <View
         style="@style/verticalBorder" />
-      <FrameLayout
+      <LinearLayout
+        android:id="@+id/wedTaskView"
         style="@style/weekdayTaskView" />
     </LinearLayout>
 
@@ -127,7 +131,8 @@
       </FrameLayout>
       <View
         style="@style/verticalBorder" />
-      <FrameLayout
+      <LinearLayout
+        android:id="@+id/thuTaskView"
         style="@style/weekdayTaskView" />
     </LinearLayout>
 
@@ -151,7 +156,8 @@
       </FrameLayout>
       <View
         style="@style/verticalBorder" />
-      <FrameLayout
+      <LinearLayout
+        android:id="@+id/friTaskView"
         style="@style/weekdayTaskView" />
     </LinearLayout>
 
@@ -177,7 +183,8 @@
       </FrameLayout>
       <View
         style="@style/verticalBorder" />
-      <FrameLayout
+      <LinearLayout
+        android:id="@+id/satTaskView"
         style="@style/weekdayTaskView" />
     </LinearLayout>
 
