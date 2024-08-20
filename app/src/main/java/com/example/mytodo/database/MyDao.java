@@ -11,6 +11,7 @@ import java.util.List;
 
 @Dao
 public interface MyDao {
+
   @Insert
   void insertPlan(Plan plan);
 
@@ -21,21 +22,21 @@ public interface MyDao {
   void insertResult(Result result);
 
   @Insert
-  Void insertCategory(Category category);
+  void insertCategory(Category category);
 
-  @Query("SELECT * FROM Plan")
-  List<Plan> getAllPlans();
+  @Query("SELECT * FROM `Plan`")
+  List<Plan> getPlans();
 
   @Query("SELECT * FROM Task")
-  List<Task> getAllTasks();
+  List<Task> getTasks();
 
   @Query("SELECT * FROM Result")
-  List<Result> getAllResults();
+  List<Result> getResults();
 
   @Query("SELECT name FROM Category")
-  List<String> getAllCategoryNames();
+  List<String> getCategoryNames();
 
   @Query("SELECT * FROM Category")
-  List<Category> getAllCategories();
+  List<Category> getCategories();
 
 }

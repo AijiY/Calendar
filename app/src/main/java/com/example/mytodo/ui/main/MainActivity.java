@@ -12,31 +12,25 @@ import android.widget.FrameLayout;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
-import com.example.mytodo.data.model.Result;
+import com.example.mytodo.data.model.Category;
+import com.example.mytodo.database.MyDao;
+import com.example.mytodo.database.MyToDoDatabase;
 import com.example.mytodo.ui.add_or_edit_to_do.AddOrEditToDoActivity;
 import com.example.mytodo.R;
-import com.example.mytodo.data.model.Plan;
-import com.example.mytodo.data.model.Task;
 import com.example.mytodo.utils.DateUtils;
 import com.example.mytodo.utils.TouchUtils;
 import com.google.android.material.tabs.TabLayout;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
   public static final Date presentDate = new Date();
   public static Date showingDate = presentDate;
 
-//  public static List<Plan> plans = new ArrayList<>();
-//  public static List<Task> tasks = new ArrayList<>();
-//  public static List<Result> results = new ArrayList<>();
-//  public static List<String> categories = new ArrayList<>(
-//      Arrays.asList("none", "Add New"));
+  private MyToDoDatabase db;
+  private MyDao myDao;
 
   public static TabLayout dateTypeTabLayout;
   private GestureDetector gestureDetector;
@@ -50,6 +44,11 @@ public class MainActivity extends AppCompatActivity {
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
+
+    //    データベース初期設定
+    db = MyToDoDatabase.getDatabase(this);
+    myDao = db.myDao();
+    populateInitialData(db);
 
     dateTypeTabLayout = findViewById(R.id.dateTypeTabLayout);
     addButton = findViewById(R.id.addButton);
@@ -218,6 +217,19 @@ public class MainActivity extends AppCompatActivity {
 
     // 現在選択されているタブに基づいてフラグメントを再表示
     displayFragmentForTab(currentTab);
+  }
+
+  private void populateInitialData(final MyToDoDatabase db) {
+    // データベースにアクセスして初期データを挿入する
+    new Thread(() -> {
+      MyDao dao = db.myDao();
+      if (dao.getCategories().isEmpty()) { // カテゴリが空かどうか確認
+        Log.d("DB", "Add 1st Category");
+        dao.insertCategory(new Category("none"));
+        Log.d("DB", "Add 2nd Category");
+        dao.insertCategory(new Category("Add New"));
+      }
+    }).start();
   }
 
 // 他のActivityがなければ、戻るボタンでアプリを終了

@@ -4,7 +4,7 @@
   <string name="storeButton">Store</string>
   <string name="planRadioButton">Plan</string>
   <string name="taskRadioButton">Task</string>
-  <string name="recordRadioButton">Record</string>
+  <string name="resultRadioButton">Result</string>
   <string name="daySample">10</string>
   <string name="allDay">AllDay</string>
   <string name="inputHint">Input Title</string>

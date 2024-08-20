@@ -87,11 +87,13 @@ public class AddOrEditToDoActivity extends AppCompatActivity {
     db = MyToDoDatabase.getDatabase(this);
     myDao = db.myDao();
 
+
+
     // データベースからカテゴリを取得してSpinnerに設定
     Executor executor = Executors.newSingleThreadExecutor();
     executor.execute(() -> {
       // データベースからカテゴリを全件取得
-      categories = myDao.getAllCategoryNames();
+      categories = myDao.getCategoryNames();
 
       // UIスレッドでSpinnerに反映
       runOnUiThread(() -> {
@@ -103,6 +105,35 @@ public class AddOrEditToDoActivity extends AppCompatActivity {
         categorySpinner.setAdapter(adapter);
       });
     });
+
+    //  デバッグ
+    new Thread(() -> {
+      // データベースからデータを取得
+      List<Plan> plans = myDao.getPlans();
+      List<Task> tasks = myDao.getTasks();
+      List<Result> results = myDao.getResults();
+      List<Category> categories2 = myDao.getCategories();
+
+      // Gsonのインスタンスを作成（インデント付き）
+      Gson gson = new GsonBuilder().setPrettyPrinting().create();
+
+      Type plansType = new TypeToken<List<Plan>>() {}.getType();
+      Type tasksType = new TypeToken<List<Task>>() {}.getType();
+      Type resultsType = new TypeToken<List<Result>>() {}.getType();
+      Type categoriesType = new TypeToken<List<Category>>() {}.getType();
+
+      String plansJson = gson.toJson(plans, plansType);
+      String tasksJson = gson.toJson(tasks, tasksType);
+      String resultsJson = gson.toJson(results, resultsType);
+      String categoriesJson = gson.toJson(categories2, categoriesType);
+
+      // 整形してログに出力
+      Log.d("MyTag", "Plans JSON:\n" + plansJson);
+      Log.d("MyTag", "Tasks JSON:\n" + tasksJson);
+      Log.d("MyTag", "Results JSON:\n" + resultsJson);
+      Log.d("MyTag", "Categories JSON:\n" + categoriesJson);
+    }).start();
+//      デバッグ終了
 
     categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
       @Override
@@ -174,23 +205,27 @@ public class AddOrEditToDoActivity extends AppCompatActivity {
         return; // 処理を終了してリスナーを抜ける
       }
       if (planRadioButton.isChecked()) {
-        // allDaySwitch がチェックされている場合の処理
-        addNewPlan(title, details, calendarStart, calendarEnd, allDaySwitch, categorySpinner);
+        boolean isAllDay = allDaySwitch.isChecked();
+        Plan plan = new Plan(title, details, categorySpinner.getSelectedItem().toString(), allDaySwitch.isChecked(),
+            calendarStartWithAllDay(calendarStart, isAllDay), calendarEndWithAllDay(calendarEnd, isAllDay));
+        new Thread(() -> myDao.insertPlan(plan)).start();
       } else if (taskRadioButton.isChecked()) {
         Task task = new Task(title, details, false);
         new Thread(() -> myDao.insertTask(task)).start();
       } else {
-        Result result = new Result(title, details, categorySpinner.getSelectedItem().toString(), allDaySwitch.isChecked(), calendarStart, calendarEnd);
+        boolean isAllDay = allDaySwitch.isChecked();
+        Result result = new Result(title, details, categorySpinner.getSelectedItem().toString(), allDaySwitch.isChecked(),
+            calendarStartWithAllDay(calendarStart, isAllDay), calendarEndWithAllDay(calendarEnd, isAllDay));
         new Thread(() -> myDao.insertResult(result)).start();
       }
 
 //  デバッグ
       new Thread(() -> {
         // データベースからデータを取得
-        List<Plan> plans = myDao.getAllPlans();
-        List<Task> tasks = myDao.getAllTasks();
-        List<Result> results = myDao.getAllResults();
-        List<Category> categories2 = myDao.getAllCategories();
+        List<Plan> plans = myDao.getPlans();
+        List<Task> tasks = myDao.getTasks();
+        List<Result> results = myDao.getResults();
+        List<Category> categories2 = myDao.getCategories();
 
         // Gsonのインスタンスを作成（インデント付き）
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
@@ -395,7 +430,7 @@ public class AddOrEditToDoActivity extends AppCompatActivity {
             myDao.insertCategory(newCategory);
 
             // 2. categories を更新されたデータベースの内容で上書き
-            categories = myDao.getAllCategoryNames();
+            categories = myDao.getCategoryNames();
 
             // UIスレッドでSpinnerを更新
             runOnUiThread(() -> {
@@ -420,16 +455,21 @@ public class AddOrEditToDoActivity extends AppCompatActivity {
     dialog.show();
   }
 
-  private void addNewPlan(String title, String details, Calendar calendarStart, Calendar calendarEnd, Switch allDaySwitch, Spinner categorySpinner) {
-    if (allDaySwitch.isChecked()) {
+  private Calendar calendarStartWithAllDay(Calendar calendarStart, boolean isAllDay) {
+    if (isAllDay) {
       // calendarStart を 0時に設定
       calendarStart.set(Calendar.HOUR_OF_DAY, 0);
       calendarStart.set(Calendar.MINUTE, 0);
       calendarStart.set(Calendar.SECOND, 0);
       calendarStart.set(Calendar.MILLISECOND, 0);
+    }
+    return calendarStart;
+  }
 
+  private Calendar calendarEndWithAllDay(Calendar calendarEnd, boolean isAllDay) {
+    if (isAllDay) {
       // calendarEnd を翌日の0時に設定
-      Calendar endDate = (Calendar) calendarStart.clone(); // calendarStart をクローン
+      Calendar endDate = (Calendar) calendarEnd.clone(); // calendarEnd をクローン
       endDate.add(Calendar.DAY_OF_MONTH, 1); // 1日追加
       endDate.set(Calendar.HOUR_OF_DAY, 0);
       endDate.set(Calendar.MINUTE, 0);
@@ -438,8 +478,7 @@ public class AddOrEditToDoActivity extends AppCompatActivity {
 
       calendarEnd.setTime(endDate.getTime()); // calendarEnd に設定
     }
-    Plan plan = new Plan(title, details, categorySpinner.getSelectedItem().toString(), allDaySwitch.isChecked(), calendarStart, calendarEnd);
-    new Thread(() -> myDao.insertPlan(plan)).start();
+    return calendarEnd;
   }
 
   // 戻るボタンでActivity終了

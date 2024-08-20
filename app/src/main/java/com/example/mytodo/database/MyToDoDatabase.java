@@ -1,17 +1,15 @@
 package com.example.mytodo.database;
 
 import android.content.Context;
-import androidx.annotation.NonNull;
+import android.util.Log;
 import androidx.room.Database;
 import androidx.room.Room;
 import androidx.room.RoomDatabase;
 import androidx.room.TypeConverters;
-import androidx.sqlite.db.SupportSQLiteDatabase;
 import com.example.mytodo.data.model.Category;
 import com.example.mytodo.data.model.Plan;
 import com.example.mytodo.data.model.Result;
 import com.example.mytodo.data.model.Task;
-import java.util.concurrent.Executors;
 
 @Database(entities = {Plan.class, Task.class, Result.class, Category.class}, version = 1, exportSchema = false)
 @TypeConverters({Converters.class})
@@ -26,24 +24,13 @@ public abstract class MyToDoDatabase extends RoomDatabase {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             MyToDoDatabase.class, "my_to_do_database")
-                        .build();
+                            .build();
                 }
             }
+        } else {
+            Log.d("MyToDoDatabase", "Returning existing database instance");
         }
         return INSTANCE;
     }
-
-    public static RoomDatabase.Callback sRoomDatabaseCallback = new RoomDatabase.Callback() {
-        @Override
-        public void onCreate(@NonNull SupportSQLiteDatabase db) {
-            super.onCreate(db);
-            // データベース初回作成時にデフォルトカテゴリーを挿入
-            Executors.newSingleThreadExecutor().execute(() -> {
-                MyDao dao = INSTANCE.myDao();
-                dao.insertCategory(new Category("None"));
-                dao.insertCategory(new Category("Add New"));
-            });
-        }
-    };
 
 }
