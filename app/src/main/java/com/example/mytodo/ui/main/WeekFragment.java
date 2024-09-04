@@ -1,9 +1,7 @@
 package com.example.mytodo.ui.main;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -20,23 +18,21 @@ import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import com.example.mytodo.R;
-import com.example.mytodo.data.model.Category;
 import com.example.mytodo.data.model.Plan;
 import com.example.mytodo.data.model.Result;
 import com.example.mytodo.data.model.Task;
 import com.example.mytodo.database.MyDao;
 import com.example.mytodo.database.MyToDoDatabase;
+import com.example.mytodo.utils.ClassUtils;
 import com.example.mytodo.utils.DateUtils;
 import com.example.mytodo.utils.TouchUtils;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.reflect.TypeToken;
-import java.lang.reflect.Type;
-import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class WeekFragment extends Fragment {
   private MainActivity mainActivity;
@@ -45,12 +41,6 @@ public class WeekFragment extends Fragment {
 
   private MyToDoDatabase db;
   private MyDao myDao;
-  private List<Plan> plans;
-  private List<Task> tasks;
-  private List<Result> results;
-
-
-
 
   public WeekFragment() {
   }
@@ -80,6 +70,7 @@ public class WeekFragment extends Fragment {
   @Override
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.fragment_week, container, false);
+
 
     // 日付を設定するための TextView と円形の View を取得
     TextView sunTextView = view.findViewById(R.id.SunTextView);
@@ -113,8 +104,6 @@ public class WeekFragment extends Fragment {
     // カレンダーを使って週の日付を計算
     Calendar calendar = Calendar.getInstance();
     calendar.setTime(mainActivity.showingDate);
-
-    // 週の始まり (日曜日) から始める
     calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
 
     // 現在の表示中の日付
@@ -137,50 +126,88 @@ public class WeekFragment extends Fragment {
 //    データベースからデータを取得
     db = MyToDoDatabase.getDatabase(getContext());
     myDao = db.myDao();
-    new Thread(() -> {
-      plans = myDao.getPlans();
-      tasks = myDao.getTasks();
-      results = myDao.getResults();
+    calendar.setTime(mainActivity.showingDate);
+    calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
 
-      // Gsonのインスタンスを作成（インデント付き）
-      Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    ExecutorService executor = Executors.newSingleThreadExecutor();
+    Handler handler = new Handler(Looper.getMainLooper());
+    executor.execute(() -> {
+      for (View taskView : taskViews) {
+        Log.d("WeekFragment", calendar.getTime().toString());
+        List<Object> mixedList = new ArrayList<>();
+        // 1週間分の日付をループ
+        mixedList.addAll(myDao.getPlansByDate(calendar));
+        mixedList.addAll(myDao.getTasksByDate(calendar));
+        mixedList.addAll(myDao.getResultsByDate(calendar));
 
-      Type plansType = new TypeToken<List<Plan>>() {}.getType();
-      Type tasksType = new TypeToken<List<Task>>() {}.getType();
-      Type resultsType = new TypeToken<List<Result>>() {}.getType();
+        Log.d("WeekFragment", "mixedList size: " + mixedList.size());
 
-      String plansJson = gson.toJson(plans, plansType);
-      String tasksJson = gson.toJson(tasks, tasksType);
-      String resultsJson = gson.toJson(results, resultsType);
+        mixedList.sort((o1, o2) -> {
+          Calendar calendarStart1 = DateUtils.getCalendarStart(o1);
+          Calendar calendarStart2 = DateUtils.getCalendarStart(o2);
+          int startComparison = calendarStart1.compareTo(calendarStart2);
 
-      // 整形してログに出力
-      Log.d("WeekFragment", "Plans JSON:\n" + plansJson);
-      Log.d("WeekFragment", "Tasks JSON:\n" + tasksJson);
-      Log.d("WeekFragment", "Results JSON:\n" + resultsJson);
-
-//      データ取得後にviewの作成
-      new Handler(Looper.getMainLooper()).post(() -> {
-        calendar.setTime(mainActivity.showingDate);
-        for (int i = 0; i < taskViews.length; i++) {
-          if (plans != null && !plans.isEmpty()) {
-            showPlans(plans, calendar, taskViews[i]);
-          } else {
-            Log.e("WeekFragment", "No plans available or plans list is null.");
+          if (startComparison != 0) {
+            return startComparison; // calendarStartが異なる場合
           }
-          if (tasks != null && !tasks.isEmpty()) {
-            showTasks(tasks, calendar, taskViews[i]);
-          } else {
-            Log.e("WeekFragment", "No tasks available or tasks list is null.");
+
+          // calendarStartが同じ場合の処理
+          int classOrder1 = ClassUtils.getClassOrder(o1);
+          int classOrder2 = ClassUtils.getClassOrder(o2);
+
+          if (classOrder1 != classOrder2) {
+            return Integer.compare(classOrder1, classOrder2); // クラス順でソート
           }
-          if (results != null && !results.isEmpty()) {
-            showResults(results, calendar, taskViews[i]);
-          } else {
-            Log.e("WeekFragment", "No results available or results list is null.");
+
+          // 同じクラスのPlanまたはResultでcalendarEndを比較
+          if (o1 instanceof Plan || o1 instanceof Result) {
+            Calendar calendarEnd1 = DateUtils.getCalendarEnd(o1);
+            Calendar calendarEnd2 = DateUtils.getCalendarEnd(o2);
+            int endComparison = calendarEnd1.compareTo(calendarEnd2);
+            if (endComparison != 0) {
+              return endComparison; // calendarEndが異なる場合
+            }
           }
-          calendar.add(Calendar.DAY_OF_YEAR, 1);
+
+          return 0; // それでも同じ場合、順序は変えない
+        });
+
+        // Latchを使ってUI更新が完了するまで待つ
+        CountDownLatch latch = new CountDownLatch(1);
+
+  //      データ取得後にviewの作成
+        handler.post(() -> {
+//          プラン、タスク、結果を表示
+
+          for (Object obj : mixedList) {
+            if (obj instanceof Plan) {
+              Plan plan = (Plan) obj;
+              showPlans(List.of(plan), calendar, taskView);
+            } else if (obj instanceof Task) {
+              Task task = (Task) obj;
+              showTasks(List.of(task), calendar, taskView);
+            } else if (obj instanceof Result) {
+              Result result = (Result) obj;
+              showResults(List.of(result), calendar, taskView);
+            }
+          }
+          // UI更新が完了したらlatchをカウントダウン
+          latch.countDown();
+        });
+
+        try {
+          // latchがカウントダウンされるまで待つ
+          latch.await();
+        } catch (InterruptedException e) {
+          e.printStackTrace();
         }
-      });
-    }).start();
+
+        calendar.add(Calendar.DAY_OF_YEAR, 1);
+      }
+
+      // ExecutorService の終了処理
+      executor.shutdown();
+    });
 
 
 
@@ -211,7 +238,7 @@ public class WeekFragment extends Fragment {
 
   private void setDateAndHighlight(TextView textView, View circleView, Date date) {
     textView.setText(DateUtils.formatDate(date));
-    if (DateUtils.isSameDay(date, mainActivity.presentDate)) {
+    if (DateUtils.isSameDayByDate(date, mainActivity.presentDate)) {
       circleView.setVisibility(View.VISIBLE); // presentDate と一致する場合、円形の View を表示
     } else {
       circleView.setVisibility(View.GONE); // 他のテキストビューは円形の View を非表示
@@ -219,6 +246,7 @@ public class WeekFragment extends Fragment {
   }
 
   private void showPlans(List<Plan> plans, Calendar calendar, View taskView) {
+    Log.d("WeekFragment", "showPlans");
 //    色リソースの取得
     int viewColor = ContextCompat.getColor(taskView.getContext(), R.color.plan);
     for (Plan plan : plans) {
@@ -227,92 +255,90 @@ public class WeekFragment extends Fragment {
       Calendar endCal = Calendar.getInstance();
       endCal.setTime(plan.getCalendarEnd().getTime());
 
-      // calendarの日付がstartとendの間にあるか確認
-      if (!calendar.before(startCal) && !calendar.after(endCal)) {
-        // 新しい TextView を作成
-        TextView newTaskView = new TextView(taskView.getContext());
+      // 新しい TextView を作成
+      TextView newTaskView = new TextView(taskView.getContext());
 
-        // スタイルを適用
-        newTaskView.setLayoutParams(new ViewGroup.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT
-        ));
-        newTaskView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 8); // 文字の大きさ
-        newTaskView.setTextColor(Color.WHITE); // 文字色
-        newTaskView.setBackgroundColor(viewColor); // 背景色 (ライトブルー)
-        newTaskView.setPadding(8, 8, 8, 8); // パディング
+      // スタイルを適用
+      newTaskView.setLayoutParams(new ViewGroup.LayoutParams(
+          ViewGroup.LayoutParams.MATCH_PARENT,
+          ViewGroup.LayoutParams.WRAP_CONTENT
+      ));
+      newTaskView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 8); // 文字の大きさ
+      newTaskView.setTextColor(Color.WHITE); // 文字色
+      newTaskView.setBackgroundColor(viewColor); // 背景色 (ライトブルー)
+      newTaskView.setPadding(8, 8, 8, 8); // パディング
 
-        // 予定が複数日にまたがる場合、タイトルに（Y/X 日目）を追加
-        String displayText = plan.getTitle();
-        if (!startCal.equals(endCal)) {
-          // 日数計算
-          long daysBetween = (endCal.getTimeInMillis() - startCal.getTimeInMillis()) / (1000 * 60 * 60 * 24);
-          long daysElapsed = (calendar.getTimeInMillis() - startCal.getTimeInMillis()) / (1000 * 60 * 60 * 24) + 1;
-          displayText += String.format("（%d/%d 日目）", daysElapsed, daysBetween + 1);
-        }
-        newTaskView.setText(displayText);
-
-        // クリックリスナーの設定
-        newTaskView.setOnClickListener(v -> {
-          // ここにクリック時の処理を実装
-          // 例: 予定の詳細画面を開く
-
-        });
-
-        // taskView に新しい TextView を追加
-        if (taskView instanceof ViewGroup) {
-          ((ViewGroup) taskView).addView(newTaskView);
-        }
+      // 予定が複数日にまたがる場合、タイトルに（Y/X 日目）を追加
+      String displayText = plan.getTitle();
+      if (!DateUtils.isSameDayByCalendar(startCal, endCal)) {
+        // 日数計算
+        long daysBetween = (endCal.getTimeInMillis() - startCal.getTimeInMillis()) / (1000 * 60 * 60 * 24);
+        long daysElapsed = (calendar.getTimeInMillis() - startCal.getTimeInMillis()) / (1000 * 60 * 60 * 24) + 1;
+        displayText += String.format("（%d/%d 日目）", daysElapsed, daysBetween + 1);
       }
+      newTaskView.setText(displayText);
+
+      // クリックリスナーの設定
+      newTaskView.setOnClickListener(v -> {
+        // ここにクリック時の処理を実装
+        // 例: 予定の詳細画面を開く
+
+      });
+
+      // taskView に新しい TextView を追加
+      if (taskView instanceof ViewGroup) {
+        ((ViewGroup) taskView).addView(newTaskView);
+      }
+
     }
   }
 
   private void showTasks(List<Task> tasks, Calendar calendar, View taskView) {
+    Log.d("WeekFragment", "showTasks");
 //    色リソースの取得
     int unfinishedColor = ContextCompat.getColor(taskView.getContext(), R.color.taskUnfinished);
     int finishedColor = ContextCompat.getColor(taskView.getContext(), R.color.taskFinished);
 
     for (Task task : tasks) {
 
-      // calendarの日付がstartとendの間にあるか確認
-      if (DateUtils.isSameDay(calendar.getTime(), task.getCalendarStart().getTime())) {
-        // 新しい TextView を作成
-        TextView newTaskView = new TextView(taskView.getContext());
+      // 新しい TextView を作成
+      TextView newTaskView = new TextView(taskView.getContext());
 
-        // スタイルを適用
-        newTaskView.setLayoutParams(new ViewGroup.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT
-        ));
-        newTaskView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 8); // 文字の大きさ
-        newTaskView.setTextColor(Color.WHITE); // 文字色
-        if (task.isFinished()) {
-          newTaskView.setBackgroundColor(finishedColor);
-        } else {
-          newTaskView.setBackgroundColor(unfinishedColor);
-        }
-        newTaskView.setPadding(8, 8, 8, 8); // パディング
-
-        // 予定が複数日にまたがる場合、タイトルに（Y/X 日目）を追加
-        String displayText = task.getTitle();
-        newTaskView.setText(displayText);
-
-        // クリックリスナーの設定
-        newTaskView.setOnClickListener(v -> {
-          // ここにクリック時の処理を実装
-          // 例: 予定の詳細画面を開く
-
-        });
-
-        // taskView に新しい TextView を追加
-        if (taskView instanceof ViewGroup) {
-          ((ViewGroup) taskView).addView(newTaskView);
-        }
+      // スタイルを適用
+      newTaskView.setLayoutParams(new ViewGroup.LayoutParams(
+          ViewGroup.LayoutParams.MATCH_PARENT,
+          ViewGroup.LayoutParams.WRAP_CONTENT
+      ));
+      newTaskView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 8); // 文字の大きさ
+      newTaskView.setTextColor(Color.WHITE); // 文字色
+      if (task.isFinished()) {
+        newTaskView.setBackgroundColor(finishedColor);
+      } else {
+        newTaskView.setBackgroundColor(unfinishedColor);
       }
+      newTaskView.setPadding(8, 8, 8, 8); // パディング
+
+      // 予定が複数日にまたがる場合、タイトルに（Y/X 日目）を追加
+      String displayText = task.getTitle();
+      newTaskView.setText(displayText);
+
+      // クリックリスナーの設定
+      newTaskView.setOnClickListener(v -> {
+        // ここにクリック時の処理を実装
+        // 例: 予定の詳細画面を開く
+
+      });
+
+      // taskView に新しい TextView を追加
+      if (taskView instanceof ViewGroup) {
+        ((ViewGroup) taskView).addView(newTaskView);
+      }
+
     }
   }
 
   private void showResults(List<Result> results, Calendar calendar, View taskView) {
+    Log.d("WeekFragment", "showResults");
 //    色リソースの取得
     int viewColor = ContextCompat.getColor(taskView.getContext(), R.color.result);
     for (Result result : results) {
@@ -321,43 +347,41 @@ public class WeekFragment extends Fragment {
       Calendar endCal = Calendar.getInstance();
       endCal.setTime(result.getCalendarEnd().getTime());
 
-      // calendarの日付がstartとendの間にあるか確認
-      if (!calendar.before(startCal) && !calendar.after(endCal)) {
-        // 新しい TextView を作成
-        TextView newTaskView = new TextView(taskView.getContext());
+      // 新しい TextView を作成
+      TextView newTaskView = new TextView(taskView.getContext());
 
-        // スタイルを適用
-        newTaskView.setLayoutParams(new ViewGroup.LayoutParams(
-            ViewGroup.LayoutParams.MATCH_PARENT,
-            ViewGroup.LayoutParams.WRAP_CONTENT
-        ));
-        newTaskView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 8); // 文字の大きさ
-        newTaskView.setTextColor(Color.WHITE); // 文字色
-        newTaskView.setBackgroundColor(viewColor); // 背景色 (ライトブルー)
-        newTaskView.setPadding(8, 8, 8, 8); // パディング
+      // スタイルを適用
+      newTaskView.setLayoutParams(new ViewGroup.LayoutParams(
+          ViewGroup.LayoutParams.MATCH_PARENT,
+          ViewGroup.LayoutParams.WRAP_CONTENT
+      ));
+      newTaskView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 8); // 文字の大きさ
+      newTaskView.setTextColor(Color.WHITE); // 文字色
+      newTaskView.setBackgroundColor(viewColor); // 背景色 (ライトブルー)
+      newTaskView.setPadding(8, 8, 8, 8); // パディング
 
-        // 予定が複数日にまたがる場合、タイトルに（Y/X 日目）を追加
-        String displayText = result.getTitle();
-        if (!startCal.equals(endCal)) {
-          // 日数計算
-          long daysBetween = (endCal.getTimeInMillis() - startCal.getTimeInMillis()) / (1000 * 60 * 60 * 24);
-          long daysElapsed = (calendar.getTimeInMillis() - startCal.getTimeInMillis()) / (1000 * 60 * 60 * 24) + 1;
-          displayText += String.format("（%d/%d 日目）", daysElapsed, daysBetween + 1);
-        }
-        newTaskView.setText(displayText);
-
-        // クリックリスナーの設定
-        newTaskView.setOnClickListener(v -> {
-          // ここにクリック時の処理を実装
-          // 例: 予定の詳細画面を開く
-
-        });
-
-        // taskView に新しい TextView を追加
-        if (taskView instanceof ViewGroup) {
-          ((ViewGroup) taskView).addView(newTaskView);
-        }
+      // 予定が複数日にまたがる場合、タイトルに（Y/X 日目）を追加
+      String displayText = result.getTitle();
+      if (!DateUtils.isSameDayByCalendar(startCal, endCal)) {
+        // 日数計算
+        long daysBetween = (endCal.getTimeInMillis() - startCal.getTimeInMillis()) / (1000 * 60 * 60 * 24);
+        long daysElapsed = (calendar.getTimeInMillis() - startCal.getTimeInMillis()) / (1000 * 60 * 60 * 24) + 1;
+        displayText += String.format("（%d/%d 日目）", daysElapsed, daysBetween + 1);
       }
+      newTaskView.setText(displayText);
+
+      // クリックリスナーの設定
+      newTaskView.setOnClickListener(v -> {
+        // ここにクリック時の処理を実装
+        // 例: 予定の詳細画面を開く
+
+      });
+
+      // taskView に新しい TextView を追加
+      if (taskView instanceof ViewGroup) {
+        ((ViewGroup) taskView).addView(newTaskView);
+      }
+
     }
   }
 

@@ -1,5 +1,8 @@
 package com.example.mytodo.utils;
 
+import com.example.mytodo.data.model.Plan;
+import com.example.mytodo.data.model.Result;
+import com.example.mytodo.data.model.Task;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -56,11 +59,16 @@ public class DateUtils {
     return getOrdinalDate(startDay) + "-" + getOrdinalDate(endDay);
   }
 
-  public static boolean isSameDay(Date date1, Date date2) {
+  public static boolean isSameDayByDate(Date date1, Date date2) {
     Calendar cal1 = Calendar.getInstance();
     Calendar cal2 = Calendar.getInstance();
     cal1.setTime(date1);
     cal2.setTime(date2);
+    return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
+        cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
+  }
+
+  public static boolean isSameDayByCalendar(Calendar cal1, Calendar cal2) {
     return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR) &&
         cal1.get(Calendar.DAY_OF_YEAR) == cal2.get(Calendar.DAY_OF_YEAR);
   }
@@ -84,5 +92,38 @@ public class DateUtils {
     }
 
     return sdf.format(date);
+  }
+
+  public static Calendar getCalendarStart(Object obj) {
+    if (obj instanceof Plan) {
+      return ((Plan) obj).getCalendarStart();
+    } else if (obj instanceof Task) {
+      return ((Task) obj).getCalendarStart(); // Taskに対応するgetterがある場合
+    } else if (obj instanceof Result) {
+      return ((Result) obj).getCalendarStart();
+    }
+    return null;
+  }
+
+  public static Calendar getCalendarEnd(Object obj) {
+    if (obj instanceof Plan) {
+      return ((Plan) obj).getCalendarEnd();
+    } else if (obj instanceof Result) {
+      return ((Result) obj).getCalendarEnd();
+    }
+    return null;
+  }
+
+  public static String formatCalendarToDateString(Calendar calendar) {
+    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+    String date = sdf.format(calendar.getTime());
+    return date;
+  }
+
+  public static Date getSundayDate(Date date) {
+    Calendar calendar = Calendar.getInstance();
+    calendar.setTime(date);
+    calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+    return calendar.getTime();
   }
 }

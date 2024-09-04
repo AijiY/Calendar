@@ -7,6 +7,7 @@ import com.example.mytodo.data.model.Category;
 import com.example.mytodo.data.model.Plan;
 import com.example.mytodo.data.model.Result;
 import com.example.mytodo.data.model.Task;
+import java.util.Calendar;
 import java.util.List;
 
 @Dao
@@ -38,5 +39,14 @@ public interface MyDao {
 
   @Query("SELECT * FROM Category")
   List<Category> getCategories();
+
+  @Query("SELECT * FROM `Plan` WHERE date(:calendar) BETWEEN date(calendar_start) AND date(calendar_end)")
+  List<Plan> getPlansByDate(Calendar calendar);
+
+  @Query("SELECT * FROM Task WHERE date(:calendar) = date(calendar_start)")
+  List<Task> getTasksByDate(Calendar calendar);
+
+  @Query("SELECT * FROM Result WHERE date(:calendar) BETWEEN date(calendar_start) AND date(calendar_end)")
+  List<Result> getResultsByDate(Calendar calendar);
 
 }
