@@ -44,6 +44,7 @@ import java.util.List;
 import java.util.Locale;
 
 import java.util.concurrent.Executor;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class AddOrEditToDoActivity extends AppCompatActivity {
@@ -61,6 +62,8 @@ public class AddOrEditToDoActivity extends AppCompatActivity {
   private MyDao myDao;
 
   private List<String> categories;
+
+  private ExecutorService executorService;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -106,34 +109,34 @@ public class AddOrEditToDoActivity extends AppCompatActivity {
       });
     });
 
-    //  デバッグ
-    new Thread(() -> {
-      // データベースからデータを取得
-      List<Plan> plans = myDao.getPlans();
-      List<Task> tasks = myDao.getTasks();
-      List<Result> results = myDao.getResults();
-      List<Category> categories2 = myDao.getCategories();
-
-      // Gsonのインスタンスを作成（インデント付き）
-      Gson gson = new GsonBuilder().setPrettyPrinting().create();
-
-      Type plansType = new TypeToken<List<Plan>>() {}.getType();
-      Type tasksType = new TypeToken<List<Task>>() {}.getType();
-      Type resultsType = new TypeToken<List<Result>>() {}.getType();
-      Type categoriesType = new TypeToken<List<Category>>() {}.getType();
-
-      String plansJson = gson.toJson(plans, plansType);
-      String tasksJson = gson.toJson(tasks, tasksType);
-      String resultsJson = gson.toJson(results, resultsType);
-      String categoriesJson = gson.toJson(categories2, categoriesType);
-
-      // 整形してログに出力
-      Log.d("BeforeAddOrEdit", "Plans JSON:\n" + plansJson);
-      Log.d("BeforeAddOrEdit", "Tasks JSON:\n" + tasksJson);
-      Log.d("BeforeAddOrEdit", "Results JSON:\n" + resultsJson);
-      Log.d("BeforeAddOrEdit", "Categories JSON:\n" + categoriesJson);
-    }).start();
-//      デバッグ終了
+//    //  デバッグ
+//    new Thread(() -> {
+//      // データベースからデータを取得
+//      List<Plan> plans = myDao.getPlans();
+//      List<Task> tasks = myDao.getTasks();
+//      List<Result> results = myDao.getResults();
+//      List<Category> categories2 = myDao.getCategories();
+//
+//      // Gsonのインスタンスを作成（インデント付き）
+//      Gson gson = new GsonBuilder().setPrettyPrinting().create();
+//
+//      Type plansType = new TypeToken<List<Plan>>() {}.getType();
+//      Type tasksType = new TypeToken<List<Task>>() {}.getType();
+//      Type resultsType = new TypeToken<List<Result>>() {}.getType();
+//      Type categoriesType = new TypeToken<List<Category>>() {}.getType();
+//
+//      String plansJson = gson.toJson(plans, plansType);
+//      String tasksJson = gson.toJson(tasks, tasksType);
+//      String resultsJson = gson.toJson(results, resultsType);
+//      String categoriesJson = gson.toJson(categories2, categoriesType);
+//
+//      // 整形してログに出力
+//      Log.d("BeforeAddOrEdit", "Plans JSON:\n" + plansJson);
+//      Log.d("BeforeAddOrEdit", "Tasks JSON:\n" + tasksJson);
+//      Log.d("BeforeAddOrEdit", "Results JSON:\n" + resultsJson);
+//      Log.d("BeforeAddOrEdit", "Categories JSON:\n" + categoriesJson);
+//    }).start();
+////      デバッグ終了
 
     categorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
       @Override
@@ -220,7 +223,8 @@ public class AddOrEditToDoActivity extends AppCompatActivity {
       }
 
 //  デバッグ
-      new Thread(() -> {
+      executorService = Executors.newSingleThreadExecutor();
+      executorService.execute(() -> {
         // データベースからデータを取得
         List<Plan> plans = myDao.getPlans();
         List<Task> tasks = myDao.getTasks();
@@ -245,13 +249,19 @@ public class AddOrEditToDoActivity extends AppCompatActivity {
         Log.d("AfterAddOrEdit", "Tasks JSON:\n" + tasksJson);
         Log.d("AfterAddOrEdit", "Results JSON:\n" + resultsJson);
         Log.d("AfterAddOrEdit", "Categories JSON:\n" + categoriesJson);
-      }).start();
+
+//        出力してからMainActivityに戻る
+        Intent intent = new Intent(AddOrEditToDoActivity.this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish(); // AddOrEditToDoActivity を終了
+      });
 //      デバッグ終了
 
-      Intent intent = new Intent(AddOrEditToDoActivity.this, MainActivity.class);
-      intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-      startActivity(intent);
-      finish(); // AddOrEditToDoActivity を終了
+//      Intent intent = new Intent(AddOrEditToDoActivity.this, MainActivity.class);
+//      intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+//      startActivity(intent);
+//      finish(); // AddOrEditToDoActivity を終了
     });
   }
 
