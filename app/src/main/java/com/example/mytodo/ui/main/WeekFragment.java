@@ -42,6 +42,41 @@ public class WeekFragment extends Fragment {
   private MyToDoDatabase db;
   private MyDao myDao;
 
+  // 日付を設定するための TextView と円形の View
+  private TextView sunTextView;
+  private View sunCircleView;
+  private View sunTaskView;
+
+  private TextView monTextView;
+  private View monCircleView;
+  private View monTaskView;
+
+  private TextView tueTextView;
+  private View tueCircleView;
+  private View tueTaskView;
+
+  private TextView wedTextView;
+  private View wedCircleView;
+  private View wedTaskView;
+
+  private TextView thuTextView;
+  private View thuCircleView;
+  private View thuTaskView;
+
+  private TextView friTextView;
+  private View friCircleView;
+  private View friTaskView;
+
+  private TextView satTextView;
+  private View satCircleView;
+  private View satTaskView;
+
+  // 上記3要素の1週間分の配列
+  private Date[] weekDates = new Date[7];
+  private TextView[] textViews = new TextView[7];
+  private View[] circleViews = new View[7];
+  private View[] taskViews = new View[7];
+
   public WeekFragment() {
   }
 
@@ -71,35 +106,8 @@ public class WeekFragment extends Fragment {
   public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
     View view = inflater.inflate(R.layout.fragment_week, container, false);
 
-
-    // 日付を設定するための TextView と円形の View を取得
-    TextView sunTextView = view.findViewById(R.id.SunTextView);
-    View sunCircleView = view.findViewById(R.id.sunCircleView);
-    View sunTaskView = view.findViewById(R.id.sunTaskView);
-
-    TextView monTextView = view.findViewById(R.id.MonTextView);
-    View monCircleView = view.findViewById(R.id.monCircleView);
-    View monTaskView = view.findViewById(R.id.monTaskView);
-
-    TextView tueTextView = view.findViewById(R.id.TueTextView);
-    View tueCircleView = view.findViewById(R.id.tueCircleView);
-    View tueTaskView = view.findViewById(R.id.tueTaskView);
-
-    TextView wedTextView = view.findViewById(R.id.WedTextView);
-    View wedCircleView = view.findViewById(R.id.wedCircleView);
-    View wedTaskView = view.findViewById(R.id.wedTaskView);
-
-    TextView thuTextView = view.findViewById(R.id.ThuTextView);
-    View thuCircleView = view.findViewById(R.id.thuCircleView);
-    View thuTaskView = view.findViewById(R.id.thuTaskView);
-
-    TextView friTextView = view.findViewById(R.id.FriTextView);
-    View friCircleView = view.findViewById(R.id.friCircleView);
-    View friTaskView = view.findViewById(R.id.friTaskView);
-
-    TextView satTextView = view.findViewById(R.id.SatTextView);
-    View satCircleView = view.findViewById(R.id.satCircleView);
-    View satTaskView = view.findViewById(R.id.satTaskView);
+    // 変数への代入
+    assignToVariables(view);
 
     // カレンダーを使って週の日付を計算
     Calendar calendar = Calendar.getInstance();
@@ -112,10 +120,6 @@ public class WeekFragment extends Fragment {
       weekDates[i] = calendar.getTime();
       calendar.add(Calendar.DAY_OF_YEAR, 1);
     }
-    TextView[] textViews = {sunTextView, monTextView, tueTextView, wedTextView, thuTextView, friTextView, satTextView};
-    View[] circleViews = {sunCircleView, monCircleView, tueCircleView, wedCircleView, thuCircleView, friCircleView, satCircleView};
-    View[] taskViews = {sunTaskView, monTaskView, tueTaskView, wedTaskView, thuTaskView, friTaskView, satTaskView};
-
 
     // 曜日ごとに日付を設定し、presentDate と一致する場合は円形を表示
     for (int i = 0; i < textViews.length; i++) {
@@ -123,9 +127,104 @@ public class WeekFragment extends Fragment {
     }
 
 //    プラン等の表示
-//    データベースからデータを取得
+    showTextViews();
+
+//    スワイプを検出するための GestureDetector を作成
+    gestureDetector = new GestureDetector(getContext(), mainActivity.new GestureListener());
+
+//    weekLayoutにスワイプよりもタッチを優先する設定
+    LinearLayout weekLayout = view.findViewById(R.id.weekLayout);
+    TouchUtils.setPriorityOnClickListener(weekLayout, textViews, gestureDetector, 0, getContext());
+
+//    日付をクリックしたときの処理
+    for (int i = 0; i < textViews.length; i++) {
+      final Date newShowingDate = weekDates[i];
+      textViews[i].setOnClickListener(v -> {
+//        showingDateに1日加算
+        Calendar calendarForShowingDate = Calendar.getInstance();
+        calendarForShowingDate.setTime(newShowingDate);
+        mainActivity.showingDate = calendarForShowingDate.getTime();
+//        DayFragment作成
+        mainActivity.dateTypeTabLayout.getTabAt(2).select(); // タブの3番目（インデックス2）を選択
+        mainActivity.updateTextViewBasedOnDate(mainActivity.showingDate);
+        mainActivity.displayFragmentForTab(mainActivity.dateTypeTabLayout.getSelectedTabPosition());
+      });
+    }
+
+    return view;
+  }
+
+  private void assignToVariables(View view) {
+    // 日付を設定するための TextView と円形の View を取得
+    sunTextView = view.findViewById(R.id.SunTextView);
+    sunCircleView = view.findViewById(R.id.sunCircleView);
+    sunTaskView = view.findViewById(R.id.sunTaskView);
+
+    monTextView = view.findViewById(R.id.MonTextView);
+    monCircleView = view.findViewById(R.id.monCircleView);
+    monTaskView = view.findViewById(R.id.monTaskView);
+
+    tueTextView = view.findViewById(R.id.TueTextView);
+    tueCircleView = view.findViewById(R.id.tueCircleView);
+    tueTaskView = view.findViewById(R.id.tueTaskView);
+
+    wedTextView = view.findViewById(R.id.WedTextView);
+    wedCircleView = view.findViewById(R.id.wedCircleView);
+    wedTaskView = view.findViewById(R.id.wedTaskView);
+
+    thuTextView = view.findViewById(R.id.ThuTextView);
+    thuCircleView = view.findViewById(R.id.thuCircleView);
+    thuTaskView = view.findViewById(R.id.thuTaskView);
+
+    friTextView = view.findViewById(R.id.FriTextView);
+    friCircleView = view.findViewById(R.id.friCircleView);
+    friTaskView = view.findViewById(R.id.friTaskView);
+
+    satTextView = view.findViewById(R.id.SatTextView);
+    satCircleView = view.findViewById(R.id.satCircleView);
+    satTaskView = view.findViewById(R.id.satTaskView);
+
+    // 上記をtextViews, circleViews, taskViewsに代入
+    textViews[0] = sunTextView;
+    textViews[1] = monTextView;
+    textViews[2] = tueTextView;
+    textViews[3] = wedTextView;
+    textViews[4] = thuTextView;
+    textViews[5] = friTextView;
+    textViews[6] = satTextView;
+
+    circleViews[0] = sunCircleView;
+    circleViews[1] = monCircleView;
+    circleViews[2] = tueCircleView;
+    circleViews[3] = wedCircleView;
+    circleViews[4] = thuCircleView;
+    circleViews[5] = friCircleView;
+    circleViews[6] = satCircleView;
+
+    taskViews[0] = sunTaskView;
+    taskViews[1] = monTaskView;
+    taskViews[2] = tueTaskView;
+    taskViews[3] = wedTaskView;
+    taskViews[4] = thuTaskView;
+    taskViews[5] = friTaskView;
+    taskViews[6] = satTaskView;
+
+  }
+
+  private void setDateAndHighlight(TextView textView, View circleView, Date date) {
+    textView.setText(DateUtils.formatDate(date));
+    if (DateUtils.isSameDayByDate(date, mainActivity.presentDate)) {
+      circleView.setVisibility(View.VISIBLE); // presentDate と一致する場合、円形の View を表示
+    } else {
+      circleView.setVisibility(View.GONE); // 他のテキストビューは円形の View を非表示
+    }
+  }
+
+  private void showTextViews() {
+    //    データベースからデータを取得
     db = MyToDoDatabase.getDatabase(getContext());
     myDao = db.myDao();
+    Calendar calendar = Calendar.getInstance();
     calendar.setTime(mainActivity.showingDate);
     calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
 
@@ -175,7 +274,7 @@ public class WeekFragment extends Fragment {
         // Latchを使ってUI更新が完了するまで待つ
         CountDownLatch latch = new CountDownLatch(1);
 
-  //      データ取得後にviewの作成
+        //      データ取得後にviewの作成
         handler.post(() -> {
 //          プラン、タスク、結果を表示
 
@@ -208,41 +307,6 @@ public class WeekFragment extends Fragment {
       // ExecutorService の終了処理
       executor.shutdown();
     });
-
-
-
-//    スワイプを検出するための GestureDetector を作成
-    gestureDetector = new GestureDetector(getContext(), mainActivity.new GestureListener());
-
-//    weekLayoutにスワイプよりもタッチを優先する設定
-    LinearLayout weekLayout = view.findViewById(R.id.weekLayout);
-    TouchUtils.setPriorityOnClickListener(weekLayout, textViews, gestureDetector, 0, getContext());
-
-//    日付をクリックしたときの処理
-    for (int i = 0; i < textViews.length; i++) {
-      final Date newShowingDate = weekDates[i];
-      textViews[i].setOnClickListener(v -> {
-//        showingDateに1日加算
-        Calendar calendarForShowingDate = Calendar.getInstance();
-        calendarForShowingDate.setTime(newShowingDate);
-        mainActivity.showingDate = calendarForShowingDate.getTime();
-//        DayFragment作成
-        mainActivity.dateTypeTabLayout.getTabAt(2).select(); // タブの3番目（インデックス2）を選択
-        mainActivity.updateTextViewBasedOnDate(mainActivity.showingDate);
-        mainActivity.displayFragmentForTab(mainActivity.dateTypeTabLayout.getSelectedTabPosition());
-      });
-    }
-
-    return view;
-  }
-
-  private void setDateAndHighlight(TextView textView, View circleView, Date date) {
-    textView.setText(DateUtils.formatDate(date));
-    if (DateUtils.isSameDayByDate(date, mainActivity.presentDate)) {
-      circleView.setVisibility(View.VISIBLE); // presentDate と一致する場合、円形の View を表示
-    } else {
-      circleView.setVisibility(View.GONE); // 他のテキストビューは円形の View を非表示
-    }
   }
 
   private void showPlans(List<Plan> plans, Calendar calendar, View taskView) {
